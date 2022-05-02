@@ -18,6 +18,9 @@ class About(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/about.html')
 
+class Menu_Display(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'customer/menu_display.html')
 
 class Order(View):
     def get(self, request, *args, **kwargs):
