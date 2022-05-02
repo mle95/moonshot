@@ -9,10 +9,10 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="{%url 'about' %}">Customer info</a>
+        <a class="nav-link" href="{% url 'about' %}">Customer info</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Menu</a>
+        <a class="nav-link" href="{% url 'menu_display' %}">Menu</a>
       </li>
     </ul>
     <ul class="navbar-nav">
@@ -21,7 +21,7 @@
       </li>
     </ul>
 
-    <table border=0 width="50%"><tr><td align="center">
+    <table border=0 width="40%"><tr><td align="center">
     {% load account %}
     {% load i18n %}
     {% user_display user as name %}
