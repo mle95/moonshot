@@ -43,8 +43,7 @@
     <div class="col-md-2">
       <ul class="list-group">
         {% if user.is_authenticated %}
-        <li class="list-group-item"><a href="{% url 'account_email' %}">Change E-mail</a></li>
-        <li class="list-group-item"><a href="{% url 'account_logout' %}">Sign Out</a></li>
+        <li class="list-group-item"><a href="{% url 'account_logout' %}">Log Out</a></li>
         {% else %}
         <li class="list-group-item"><a href="{% url 'account_login' %}">Login</a></li>
         <li class="list-group-item"><a href="{% url 'account_signup' %}">Sign Up</a></li>
