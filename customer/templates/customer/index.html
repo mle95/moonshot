@@ -8,10 +8,21 @@
 <h3> . . . . </h3>
 <br><br>
 <br><br>
+<p>
+  <a href="/accounts/login/">Click here to login</a>
+</p>
 
 <h2>Place an order!</h2>
 
-<button>Order Now!</button>
-<a href="{% url 'order' %}">Order Now!</a>
+<table border=0 cellpadding=20>
+<tr><td>
+<button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
+onclick="document.location='/order/'">Order Now</button>
+</td>
+<tr><td>
+<button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
+onclick="document.location='/accounts/login/'">Login</button>
+</td></tr>
+</table>
 
 {% endblock content %}
