@@ -149,6 +149,6 @@ ACCOUNT_USER_MODEL_EMAIL_FIELD= 'email'
 USERNAME_FIELD = 'email'
 
 ACCOUNT_ADAPTER = 'customer.account_adapter.NoNewUsersAccountAdapter'
-LOGIN_REDIRECT_URL = 'customer_info'
+LOGIN_REDIRECT_URL = 'index'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
