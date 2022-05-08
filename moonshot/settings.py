@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 AUTHENTICATION_BACKENDS = [
@@ -78,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -140,10 +140,15 @@ MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACCOUNT_EMAIL_REQUIRED = 'email'
+ACCOUNT_FORMS = {'signup': 'customer.forms.CustomSignupForm'}
+
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_EMAIL_FIELD= 'email'
+USERNAME_FIELD = 'email'
+
 ACCOUNT_ADAPTER = 'customer.account_adapter.NoNewUsersAccountAdapter'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'customer_info'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
