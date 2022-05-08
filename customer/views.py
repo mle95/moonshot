@@ -12,16 +12,21 @@ class Index(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/index.html')
 
+class Info(View):
+    def get(self, request, *args, **kwargs):
+        customers = OrderModel.objects.all()
+
+        context = {
+            'customers': customers,
+        }
+
+        return render(request, 'customer/info.html', context)
 
 class About(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, pk, *args, **kwargs):
 
         today = datetime.today()
         new_customer = CustomerModel.objects.get(pk=pk)
-
-        #orders = OrderModel.objects.filter(email=new_customer.email)
-        #orders = OrderModel.objects.filter(created_on__year=today.year, created_on__month=today.month, created_on__day=today.day)
-        #orders = OrderModel.objects.all()
 
         orders = OrderModel.objects.filter(email__exact=new_customer.email)
 
@@ -32,6 +37,10 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
             total_spending += order.price
 
         cur_balance  = new_customer.balance - total_spending
+        #update database current balance
+        #new_customer.balance = cur_balance
+        #new_customer.save()
+
         context = {
             'pk': new_customer.pk,
             'orders': orders,
@@ -41,6 +50,7 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
             'city': new_customer.city,
             'state': new_customer.state,
             'zip_code': new_customer.zip_code,
+            'customer_balance': new_customer.balance,
             'balance': cur_balance,
             'total_spending': total_spending
         }
@@ -103,11 +113,13 @@ class Customer_Info(View):
 class Order(View):
     def get(self, request, *args, **kwargs):
         # get every item from each category
-        appetizers = MenuItem.objects.filter(
-            category__name__contains='Appetizer')
+        appetizers = MenuItem.objects.filter(category__name__contains='Appetizer')
         entres = MenuItem.objects.filter(category__name__contains='Entre')
         desserts = MenuItem.objects.filter(category__name__contains='Dessert')
         drinks = MenuItem.objects.filter(category__name__contains='Drink')
+
+        #this_customer = CustomerModel.objects.get(pk=pk)
+        #orders = OrderModel.objects.filter(email__exact=email)
 
         # pass into context
         context = {
@@ -115,11 +127,13 @@ class Order(View):
             'entres': entres,
             'desserts': desserts,
             'drinks': drinks,
+            #'cur_balance': this_customer.balance
         }
 
         # render the template
         return render(request, 'customer/order.html', context)
 
+    #def post(self, request, pk, *args, **kwargs):
     def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -155,7 +169,6 @@ class Order(View):
             item_ids.append(item['id'])
 
         order = OrderModel.objects.create(
-            price=price,
             name=name,
             email=email,
             phone=phone,
@@ -163,6 +176,7 @@ class Order(View):
             city=city,
             state=state,
             zip_code=zip_code,
+            price=price,
             bidding=bidding
 
         )
@@ -193,16 +207,23 @@ class OrderConfirmation(View):
     def get(self, request, pk, *args, **kwargs):
         order = OrderModel.objects.get(pk=pk)
 
+        this_customer = CustomerModel.objects.get(email__exact=order.email)
+        cur_balance = this_customer.balance - order.price
+        this_customer.balance = cur_balance
+        this_customer.save()
+
         context = {
             'pk': order.pk,
             'items': order.items,
             'price': order.price,
             'name': order.name,
+            'email': order.email,
+            'phone': order.phone,
             'street': order.street,
             'city': order.city,
             'state': order.state,
             'zip_code': order.zip_code,
-            'phone': order.phone,
+            'cur_balance': cur_balance
         }
 
         return render(request, 'customer/order_confirmation.html', context)
@@ -228,7 +249,6 @@ class Dashboard(LoginRequiredMixin, UserPassesTestMixin, View):
         # get the current date
         today = datetime.today()
         orders = OrderModel.objects.all()
-        #orders = OrderModel.objects.filter(created_on__year=today.year, created_on__month=today.month, created_on__day=today.day)
 
         # loop through the orders and add the price value
         total_revenue = 0
