@@ -2,10 +2,26 @@
 
 {% block content %} 
 
+<h2>Online Food Ordering (customer profile)</h2>
 
-<h1>Online Food Ordering (customer page)</h1>
+<h3>customer info page</h3>
+{% load account %}
+{% load i18n %}
 
-<h2>about customer page</h2>
+{% if user.is_authenticated %}
+
+  <table cellpadding=30 border=0><tr><td> 
+  {{ user.first_name }} {{ user.last_name }} <br>
+  {{ phone }} <br>
+  <br>
+  {{ street }} <br>
+  {{ city }}, {{ state }} {{ zip_code }} <br>
+  <hr>
+
+
+  </td></tr></table>
+
+{% endif %}
 
 <br><br>
 
