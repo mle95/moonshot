@@ -2,11 +2,10 @@ import json
 from django.shortcuts import render, redirect
 from django.views import View
 from django.core.mail import send_mail
-from .models import MenuItem, Category, OrderModel
+from .models import MenuItem, Category, OrderModel, CustomerModel
 
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.utils.timezone import datetime
-from customer.models import OrderModel
 
 
 class Index(View):
@@ -14,13 +13,92 @@ class Index(View):
         return render(request, 'customer/index.html')
 
 
-class About(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'customer/about.html')
+class About(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+
+        today = datetime.today()
+        new_customer = CustomerModel.objects.get(pk=pk)
+
+        #orders = OrderModel.objects.filter(email=new_customer.email)
+        orders = OrderModel.objects.filter(created_on__year=today.year, created_on__month=today.month, created_on__day=today.day)
+        #orders = OrderModel.objects.all()
+
+        #customer_recent_order = OrderModel.objects.filter(email__exact=new_customer.email)
+
+        total_spending = 0
+
+        # loop through the orders and find this customer info
+        for order in orders:
+            total_spending += order.price
+
+        cur_balance  = new_customer.balance - total_spending
+        context = {
+            'pk': new_customer.pk,
+            'orders': orders,
+            'email': new_customer.email,
+            'phone': new_customer.phone,
+            'street': new_customer.street,
+            'city': new_customer.city,
+            'state': new_customer.state,
+            'zip_code': new_customer.zip_code,
+            'balance': cur_balance,
+            'total_spending': total_spending
+        }
+
+
+        return render(request, 'customer/about.html', context)
+
+
+    def post(self, request, pk, *args, **kwargs):
+        data = json.loads(request.body)
+
+        return render(request, 'customer/menu_display.html')
+
+
+    def test_func(self):
+        return self
+
+
 
 class Menu_Display(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/menu_display.html')
+
+
+class Customer_Info(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'customer/customer_info.html')
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        street = request.POST.get('street')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zip_code = request.POST.get('zip')
+        balance = request.POST.get('balance')
+
+        customer = CustomerModel.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            street=street,
+            city=city,
+            state=state,
+            zip_code=zip_code,
+            balance=balance
+        )
+
+        context = {
+            'email': email,
+            'balance': balance
+        }
+
+        return redirect('about', pk=customer.pk)
+
+
+
 
 class Order(View):
     def get(self, request, *args, **kwargs):
@@ -35,6 +113,8 @@ class Order(View):
         context = {
             'appetizers': appetizers,
             'entres': entres,
+            'desserts': desserts,
+            'drinks': drinks,
         }
 
         # render the template
@@ -48,6 +128,7 @@ class Order(View):
         city = request.POST.get('city')
         state = request.POST.get('state')
         zip_code = request.POST.get('zip')
+        bidding = request.POST.get('bidding')
 
         order_items = {
             'items': []
@@ -60,7 +141,8 @@ class Order(View):
             item_data = {
                 'id': menu_item.pk,
                 'name': menu_item.name,
-                'price': menu_item.price
+                'price': menu_item.price,
+                'ratings': menu_item.ratings
             }
 
             order_items['items'].append(item_data)
@@ -80,7 +162,9 @@ class Order(View):
             street=street,
             city=city,
             state=state,
-            zip_code=zip_code
+            zip_code=zip_code,
+            bidding=bidding
+
         )
         order.items.add(*item_ids)
 
@@ -113,6 +197,12 @@ class OrderConfirmation(View):
             'pk': order.pk,
             'items': order.items,
             'price': order.price,
+            'name': order.name,
+            'street': order.street,
+            'city': order.city,
+            'state': order.state,
+            'zip_code': order.zip_code,
+            'phone': order.phone,
         }
 
         return render(request, 'customer/order_confirmation.html', context)
