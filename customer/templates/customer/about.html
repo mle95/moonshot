@@ -21,8 +21,18 @@
   {{ street }} <br>
   {{ city }}, {{ state }} {{ zip_code }} <br>
   <hr>
+  Orders history <br>
+  {% for order in orders %}
+  {% if order.email == user.email %}
 
+     {% for item in order.items.all %}
+        {{ order.created_on}} <br>
+        {{ item.name }} ${{ item.price }} <br>
+     {% endfor %}
+     <br>
 
+  {% endif %}
+  {% endfor %}
   </td></tr></table>
 
 {% endif %}
