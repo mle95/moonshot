@@ -1,0 +1,20 @@
+{% extends 'customer/base.html' %}
+{% block content %} 
+
+<br><br>
+<h3>Customer info page:</h3>
+{{user.first_name}} {{user.last_name}}
+<br><br>
+{% for customer in customers %}
+{% if customer.email == user.email %}
+show customer <a href="/about/{{customer.pk|add:-17}}">profile</a>
+{% endif %}
+{% endfor %}
+
+<br><br>
+goto <a href="#">dashboard link</a>
+<br><br>
+more text here...
+
+
+{% endblock content %}
