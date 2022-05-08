@@ -7,12 +7,16 @@
 <h3>customer info page</h3>
 {% load account %}
 {% load i18n %}
+<br>current balance 
+<b> ${{ balance }} </b>
 
 {% if user.is_authenticated %}
 
   <table cellpadding=30 border=0><tr><td> 
   {{ user.first_name }} {{ user.last_name }} <br>
   {{ phone }} <br>
+  {{ email }} <br>
+
   <br>
   {{ street }} <br>
   {{ city }}, {{ state }} {{ zip_code }} <br>
@@ -25,7 +29,7 @@
 
 <br><br>
 
-<h2>show customer account balance</h2>
+<h4>show more info?</h4>
 
 more text here...
 <br><br>
