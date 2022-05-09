@@ -1,10 +1,5 @@
-{% extends "account/base.html" %}
-
-{% load i18n %}
-
-{% block head_title %}{% trans "Log out" %}{% endblock %}
-
-{% block content %}
+{% extends "account/base.html" %} {% load i18n %} {% block head_title %}{% trans
+"Log out" %}{% endblock %} {% block content %}
 
 <div class="row justify-content-center">
   <div class="col-md-6 col-sm-12 text-left pb-3">
@@ -16,14 +11,22 @@
 <div class="row justify-content-center">
   <div class="col-md-6 col-sm-12">
     <form method="post" action="{% url 'account_logout' %}">
-      {% csrf_token %}
-      {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+      {% csrf_token %} {% if redirect_field_value %}
+      <input
+        type="hidden"
+        name="{{ redirect_field_name }}"
+        value="{{ redirect_field_value }}"
+      />
       {% endif %}
-      <button style="background-color:#b3e0ff" class="btn btn-light btn-rounded" type="submit">{% trans 'Log Out' %}</button>
+      <button
+        style="background-color: #b3e0ff"
+        class="btn btn-light btn-rounded"
+        type="submit"
+      >
+        {% trans 'Log Out' %}
+      </button>
     </form>
   </div>
 </div>
-
 
 {% endblock %}

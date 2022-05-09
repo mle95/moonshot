@@ -1,19 +1,35 @@
 {% extends 'customer/base.html' %}
 
+{% block content %}
+<div class="container mb-5">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 offset-md-1 p-4 text-center">
+            <h1>HomeTown Buffet</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-1">
+        <div class="card col-md-5 col-sm-12 offset-md-1 p-4 text-center">
+            <a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% comment %} {% extends 'customer/base.html' %}
+
 {% block content %} 
 
 <!-- front page 
 http://127.0.0.1:8000/
 -->
 
-<h1>Online Food Delivery (Moonshot project)</h1>
-<br>
-<h2>Front Page</h2>
-<h3> . . . . </h3>
+
 <br><br>
+<h1><center>Moonshot<center></h1>
+<br>
 
 
-<h2>Place an order!</h2>
 
 <table border=0 cellpadding=30>
 <tr><td>
@@ -24,8 +40,8 @@ onclick="document.location='/order/'">Order Now</button>
 
 <tr><td>
 {% if not user.is_authenticated %}
-<button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
-onclick="document.location='/accounts/login/'">Login</button>
+<center><button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
+onclick="document.location='/accounts/login/'">Login</button><center>
 
 <HR>
 <a href="/admin/"> <i> admin login </i>   </a>
@@ -40,4 +56,4 @@ onclick="document.location='{% url 'account_logout' %}'">Logout</button>
 
 </table>
 
-{% endblock content %}
+{% endblock content %} {% endcomment %}
