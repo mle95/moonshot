@@ -147,7 +147,7 @@ class Order(View):
         city = request.POST.get('city')
         state = request.POST.get('state')
         zip_code = request.POST.get('zip')
-        bidding = request.POST.get('bidding')
+        home_delivery = request.POST.get('home_delivery')
 
         order_items = {
             'items': []
@@ -182,8 +182,7 @@ class Order(View):
             city=city,
             state=state,
             zip_code=zip_code,
-            bidding=bidding
-
+            home_delivery=home_delivery,
         )
         order.items.add(*item_ids)
 
@@ -202,7 +201,8 @@ class Order(View):
 
         context = {
             'items': order_items['items'],
-            'price': price
+            'price': price,
+            'home_delivery': home_delivery
         }
 
         return redirect('order-confirmation', pk=order.pk)
