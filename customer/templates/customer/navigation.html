@@ -18,7 +18,7 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'info' %}">Customer info</a>
+        <a class="nav-link" href="{% url 'about' %}">Customer info</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'menu_display' %}">Menu</a>
@@ -37,7 +37,7 @@
 
     <table border="0" width="40%">
       <tr>
-        <td align="center">{{ user.email }}</td>
+        <td align="right">{{ user.email }}</td>
       </tr>
     </table>
   </div>
