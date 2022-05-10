@@ -35,6 +35,8 @@ class OrderModel(models.Model):
     state = models.CharField(max_length=15, blank=True)
     zip_code = models.IntegerField(blank=True, null=True)
     is_paid = models.BooleanField(default=False)
+    home_delivery = models.BooleanField(default=True)
+    home_delivery_completed = models.BooleanField(default=False)
     bidding = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
