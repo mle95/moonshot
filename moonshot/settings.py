@@ -34,6 +34,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
 INSTALLED_APPS = [
     'customer',
     'restaurant',
@@ -144,8 +145,9 @@ ACCOUNT_FORMS = {'signup': 'customer.forms.CustomSignupForm'}
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_EMAIL_FIELD= 'email'
+ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 USERNAME_FIELD = 'email'
 
 ACCOUNT_ADAPTER = 'customer.account_adapter.NoNewUsersAccountAdapter'
