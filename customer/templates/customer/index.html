@@ -1,21 +1,121 @@
-<!-- front page 
-http://127.0.0.1:8000/
--->
+{% block content %} 
 
-{% extends 'customer/base.html' %}
+<!doctype html>
+<html>
+    <head>
+        <title>Online Food Delivery (Moonshot project)</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+            
+          /* Remove the navbar's default margin-bottom and rounded borders */ 
+          .navbar {
+            margin-bottom: auto;
+            border-radius: auto;
+          }
+          
+          /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+          .row.content {height: auto}
+          
+          /* Set gray background color and 100% height */
+          .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 100%;
+          }
+          
+          /* Set black background color, white text and some padding */
+          .footer {
+            background-color: #555;
+            color: white;
+            padding: 5px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+          }
+          .blocktext {
+            display: block;
+            margin-left: auto;
+            margin-right: auto 
+        }
+            
 
-{% block content %}
-<div class="container mb-5">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8 col-sm-12 offset-md-1 p-4 text-center">
-            <h1>HomeTown Buffet</h1>
+            .vertical-center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            }
+          /* On small screens, set height to 'auto' for sidenav and grid */
+          @media screen and (max-width: 767px) {
+            .sidenav {
+              height: auto;
+              padding: 15px;
+            }
+            .row.content {height:auto;} 
+          }
+
+        </style>
+        
+      
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>                        
+            </button>
+            <a class="navbar-brand" href="#">Moonshot</a>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="menu_display">Menu</a></li>
+              <li><a href="accounts/login/?next=/about/">Customer infor</a></li>
+              <li><a href="/menu_display">Menu</a></li>
+              <li><a href="/accounts/login/">Login</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/admin"><span class="glyphicon glyphicon-log-in"></span> Admin login</a></li>
+            </ul>
+          </div>
         </div>
-    </div>
-    <div class="row justify-content-center mt-1">
-        <div class="card col-md-5 col-sm-12 offset-md-1 p-4 text-center">
-            <a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
-        </div>
-    </div>
-</div>
+      </nav>
+        
+      <div class="container-fluid text-center">    
+        <div class="row content">
+          <h1>Open monday-sunday 11AM-9PM</h1>
+          <h2>        
+            <img src="../media/logo.png" alt="logo" class="center" ></h2>
+         
+          </div>      
+
+     
+          <div class="vertical-center">
+            <table class ="blocktext">
+              <tr><td>
+              <button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
+              onclick="document.location='/order/'">Order Now</button>
+              </td>
+              <tr><td>
+              <button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
+              onclick="document.location='/accounts/login/'">Login</button>
+              </td></tr>
+            </table>
+            </div>
+
+<div class="footer">
+<p>Food Connect Inc</p>
+</div> 
+    
+</body>
+
+</html>
 
 {% endblock content %}
