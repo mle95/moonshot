@@ -1,25 +1,27 @@
 {% extends 'customer/base.html' %}
 {% block content %} 
 
-<h1>Online Food Ordering (Menu)</h1>
+<h2>Online Food Ordering (Menu)</h2>
 
 <div class="hoverwrap">
   <img src="/media/menu_images/hawaii-bbq-chicken-pizza.jpg" alt="Hawaii BBQ Chicken Pizza">
   <div class="hovercap">Hawaii BBQ Chicken Pizza</div>
 </div>
 
-
 <br><br>
 
-<h2>Menu page</h2>
-
-<br><br>
-
-<h2>show complete menu</h2>
+<h3>show complete menu</h3>
 
 more contents here...
 <br><br>
-more text here...
+
+<div class="container mb-5">
+    <div class="row justify-content-left mt-1">
+        <div class="card col-md-5 col-sm-12 offset-md-1 p-4 text-left">
+            <a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+        </div>
+    </div>
+</div>
 
 
 {% endblock content %}
