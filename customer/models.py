@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+#from django.contrib.auth.models import AbstractUser
 
 
 
@@ -50,7 +50,9 @@ class CustomerModel(models.Model):
     city = models.CharField(max_length=50, blank=True)
     state = models.CharField(max_length=15, blank=True)
     zip_code = models.IntegerField(blank=True, null=True)
-    balance = models.DecimalField(max_digits=7, decimal_places=2)
+    balance = models.DecimalField(max_digits=5, decimal_places=2)
+    VIP_status = models.IntegerField(blank=True, null=True)
+    warnings = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return f'Customer: {self.created_on.strftime("%b %d %I: %M %p")}'
