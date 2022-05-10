@@ -1,3 +1,5 @@
+# /customer/views.py
+
 import json
 from django.shortcuts import render, redirect
 from django.views import View
@@ -23,38 +25,33 @@ class Info(View):
         return render(request, 'customer/info.html', context)
 
 class About(LoginRequiredMixin, UserPassesTestMixin, View):
-    def get(self, request, pk, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
         today = datetime.today()
-        new_customer = CustomerModel.objects.get(pk=pk)
 
-        orders = OrderModel.objects.filter(email__exact=new_customer.email)
+        if request.user.is_authenticated:
+           this_customer = CustomerModel.objects.get(email__exact=request.user.email)
 
-        total_spending = 0
+           orders = OrderModel.objects.filter(email__exact=this_customer.email)
 
-        # loop through the orders and find this customer info
-        for order in orders:
-            total_spending += order.price
+           total_spending = 0
+           # loop through the orders and find this customer info
+           for order in orders:
+               total_spending += order.price
 
-        cur_balance  = new_customer.balance - total_spending
-        #update database current balance
-        #new_customer.balance = cur_balance
-        #new_customer.save()
-
-        context = {
-            'pk': new_customer.pk,
-            'orders': orders,
-            'email': new_customer.email,
-            'phone': new_customer.phone,
-            'street': new_customer.street,
-            'city': new_customer.city,
-            'state': new_customer.state,
-            'zip_code': new_customer.zip_code,
-            'customer_balance': new_customer.balance,
-            'balance': cur_balance,
-            'total_spending': total_spending
-        }
-
+           context = {
+              'pk': this_customer.pk,
+              'orders': orders,
+              'email': this_customer.email,
+              'phone': this_customer.phone,
+              'street': this_customer.street,
+              'city': this_customer.city,
+              'state': this_customer.state,
+              'zip_code': this_customer.zip_code,
+              'balance': this_customer.balance,
+               'warnings': this_customer.warnings,
+               'total_spending': total_spending
+           }
 
         return render(request, 'customer/about.html', context)
 
@@ -105,7 +102,7 @@ class Customer_Info(View):
             'balance': balance
         }
 
-        return redirect('about', pk=customer.pk)
+        return redirect('order')
 
 
 
@@ -118,22 +115,30 @@ class Order(View):
         desserts = MenuItem.objects.filter(category__name__contains='Dessert')
         drinks = MenuItem.objects.filter(category__name__contains='Drink')
 
-        #this_customer = CustomerModel.objects.get(pk=pk)
-        #orders = OrderModel.objects.filter(email__exact=email)
+        #customers = CustomerModel.objects.all()
+        if request.user.is_authenticated:
+           this_customer = CustomerModel.objects.get(email__exact=request.user.email)
 
         # pass into context
-        context = {
+        if request.user.is_authenticated:
+           context = {
             'appetizers': appetizers,
             'entres': entres,
             'desserts': desserts,
             'drinks': drinks,
-            #'cur_balance': this_customer.balance
-        }
+            'this_customer': this_customer
+           }
+        else:
+           context = {
+            'appetizers': appetizers,
+            'entres': entres,
+            'desserts': desserts,
+            'drinks': drinks,
+           }
 
         # render the template
         return render(request, 'customer/order.html', context)
 
-    #def post(self, request, pk, *args, **kwargs):
     def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -161,14 +166,15 @@ class Order(View):
 
             order_items['items'].append(item_data)
 
-            price = 0
-            item_ids = []
+        price = 0
+        item_ids = []
 
         for item in order_items['items']:
             price += item['price']
             item_ids.append(item['id'])
 
         order = OrderModel.objects.create(
+            price=price,
             name=name,
             email=email,
             phone=phone,
@@ -176,7 +182,6 @@ class Order(View):
             city=city,
             state=state,
             zip_code=zip_code,
-            price=price,
             bidding=bidding
 
         )
@@ -205,7 +210,9 @@ class Order(View):
 
 class OrderConfirmation(View):
     def get(self, request, pk, *args, **kwargs):
+
         order = OrderModel.objects.get(pk=pk)
+        #this_customer = request.user.objects.get(email=order.email)
 
         this_customer = CustomerModel.objects.get(email__exact=order.email)
         cur_balance = this_customer.balance - order.price
