@@ -1,3 +1,7 @@
+<!-- front page 
+http://127.0.0.1:8000/
+-->
+
 {% extends 'customer/base.html' %}
 
 {% block content %}
@@ -13,47 +17,5 @@
         </div>
     </div>
 </div>
+
 {% endblock content %}
-
-
-{% comment %} {% extends 'customer/base.html' %}
-
-{% block content %} 
-
-<!-- front page 
-http://127.0.0.1:8000/
--->
-
-
-<br><br>
-<h1><center>Moonshot<center></h1>
-<br>
-
-
-
-<table border=0 cellpadding=30>
-<tr><td>
-<button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
-onclick="document.location='/order/'">Order Now</button>
-</td></tr>
-
-
-<tr><td>
-{% if not user.is_authenticated %}
-<center><button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
-onclick="document.location='/accounts/login/'">Login</button><center>
-
-<HR>
-<a href="/admin/"> <i> admin login </i>   </a>
-{% endif %}
-
-{% if user.is_authenticated %}
-<button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
-onclick="document.location='{% url 'account_logout' %}'">Logout</button>
-{% endif %}
-
-</td></tr>
-
-</table>
-
-{% endblock content %} {% endcomment %}
