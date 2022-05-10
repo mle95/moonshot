@@ -25,7 +25,7 @@ urlpatterns = [
     path('customer/', include('customer.urls')),
     path('restaurant/', include('restaurant.urls')),
     path('', Index.as_view(), name='index'),
-    path('about/<int:pk>', About.as_view(), name='about'),
+    path('about/', About.as_view(), name='about'),
     path('info/', Info.as_view(), name='info'),
     path('menu_display/', Menu_Display.as_view(), name='menu_display'),
     path('customer_info/', Customer_Info.as_view(), name='customer_info'),
