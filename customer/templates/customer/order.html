@@ -55,6 +55,7 @@
 {% load account %}
 {% load i18n %}
        {% if user.is_authenticated %}
+
                 <div class="form-group pt-3">
                     <label for="name">Full Name</label>
                     <input required class="form-control" type="text" value="{{user.first_name}} {{user.last_name}}" name="name" />
@@ -67,40 +68,48 @@
 
                 <div class="form-group pt-3">
                     <label for="name">Phone</label>
-                    <input required class="form-control" type="text" placeholder="required" name="phone" />
+                    <input required class="form-control" type="text" value="{{this_customer.phone}}" name="phone" />
                 </div>
 
                 <div class="form-group pt-3">
                     <label for="name">Street Address</label>
-                    <input required class="form-control" type="text" name="street" />
+                    <input required class="form-control" type="text" value="{{this_customer.street}}" name="street" />
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group pt-3">
                             <label for="name">City</label>
-                            <input required class="form-control" type="text" name="city" />
+                            <input required class="form-control" type="text" value="{{this_customer.city}}" name="city" />
                         </div>
                     </div>
 
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group pt-3">
                             <label for="name">State</label>
-                            <input required class="form-control" type="text" name="state" />
+                            <input required class="form-control" type="text" value="{{this_customer.state}}" name="state" />
                         </div>
                     </div>
 
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group pt-3">
                             <label for="name">Zip Code</label>
-                            <input class="form-control" type="text" name="zip" />
+                            <input class="form-control" type="text" value="{{this_customer.zip_code}}" name="zip" />
                         </div>
                     </div>
                 </div>
+                <div class="form-group pt-3">
+                    <div title="to pickup this order, uncheck this box">
+                    <label for="name">Home delivery</label>
+                    <input type="checkbox" name="home_delivery" class="form-check-input" value="True" checked>
+                    </div>
+                </div>
+
                 <button class="btn btn-rounded btn-light mt-5">Place Order Now</button>
        {% endif %}
 
 {% if not user.is_authenticated %}    
+
     <h3>
     <mark>You must login before ordering food</mark>
     </h3>
