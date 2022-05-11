@@ -205,14 +205,16 @@ class Order(View):
             'home_delivery': home_delivery
         }
 
-        return redirect('order-confirmation', pk=order.pk)
+        if price > 0:
+           return redirect('order-confirmation', pk=order.pk)
+        else:
+           return redirect('order')
 
 
 class OrderConfirmation(View):
     def get(self, request, pk, *args, **kwargs):
 
         order = OrderModel.objects.get(pk=pk)
-        #this_customer = request.user.objects.get(email=order.email)
 
         this_customer = CustomerModel.objects.get(email__exact=order.email)
         cur_balance = this_customer.balance - order.price
