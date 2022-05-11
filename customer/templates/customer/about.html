@@ -2,17 +2,13 @@
 
 {% block content %} 
 
-<h2>Online Food Ordering (customer profile)</h2>
-
-<h3>customer info page</h3>
 {% load account %}
 {% load i18n %}
-<br>current balance 
-<b> ${{ balance }} </b>
+
+<h4>Online Food Ordering (customer profile)</h4>
 
 {% if user.is_authenticated %}
-
-  <table cellpadding=30 border=0><tr><td> 
+  <table cellpadding=30 width="50%" border=0><tr><td> 
   {{ user.first_name }} {{ user.last_name }} <br>
   {{ phone }} <br>
   {{ email }} <br>
@@ -22,8 +18,22 @@
   {{ city }}, {{ state }} {{ zip_code }} <br>
   <hr>
 
+<table width="100%" border=0><tr><td valign="bottom">
+current balance is <b> ${{ balance }} </b> </td>
+<td>
+  <form method="POST">
+  {% csrf_token %}
+  <input required type="number" id="funding" name="funding" min=1 max=1000>
+  <button class="btn btn-rounded btn-light mt-5">Add money</button>
+  </form>
+</td>
+</tr>
+</table>
+
+<br>
+
   {% if orders %}
-  Orders history <br>
+  Orders history <br><br>
   {% endif %}
 
   {% for order in orders %}
