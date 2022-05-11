@@ -1,27 +1,55 @@
 {% extends 'customer/base.html' %}
-{% block content %} 
+{% block content %}
 
-<h2>Online Food Ordering (Menu)</h2>
+<div class="hoverwrap">
+  <img src="/media/menu_images/menu.png" alt="Food menu">
+  <div class="hovercap">Home delivery or pickup at restaurant</div>
+</div>
 
 <div class="hoverwrap">
   <img src="/media/menu_images/hawaii-bbq-chicken-pizza.jpg" alt="Hawaii BBQ Chicken Pizza">
   <div class="hovercap">Hawaii BBQ Chicken Pizza</div>
 </div>
 
-<br><br>
+<a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
 
-<h3>show complete menu</h3>
-
-more contents here...
-<br><br>
-
-<div class="container mb-5">
-    <div class="row justify-content-left mt-1">
-        <div class="card col-md-5 col-sm-12 offset-md-1 p-4 text-left">
-            <a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
-        </div>
-    </div>
+<div class="hoverwrap">
+  <img src="/media/menu_images/Mushroom_Pizza.jpg" alt="Mushroom Pizza">
+  <div class="hovercap">Cremini Mushroom Pizza</div>
 </div>
 
+<a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+
+<div class="hoverwrap">
+  <img src="/media/menu_images/Pepperoni_pizza.jpg" alt="Pepperoni Pizza">
+  <div class="hovercap">Pepperoni Pizza</div>
+</div>
+
+<a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+
+<div class="hoverwrap">
+  <img src="/media/menu_images/pizza.jpg" alt="Grilled Chicken Pizza">
+  <div class="hovercap">Grilled Chicken Pizza With Red Onion</div>
+</div>
+
+<a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+
+<div class="hoverwrap">
+  <img src="/media/menu_images/wings.jpg" alt="Chicken Wings">
+  <div class="hovercap">Chicken Wings With Celery</div>
+</div>
+
+<a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+
+<div class="hoverwrap">
+  <img src="/media/menu_images/calamari.jpg" alt="Calamari">
+  <div class="hovercap">Calamari</div>
+</div>
+
+<a href="{% url 'order' %}" class="btn btn-outline-primary">Place an Order</a>
+
+<br><br>
+
+<hr>
 
 {% endblock content %}
