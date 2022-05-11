@@ -25,7 +25,7 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
            orders = OrderModel.objects.filter(email__exact=this_customer.email)
 
            total_spending = 0
-           # loop through the orders and find this customer info
+           # loop through the orders and calculate cumulative total amount
            for order in orders:
                total_spending += order.price
 
@@ -40,7 +40,8 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
               'zip_code': this_customer.zip_code,
               'balance': this_customer.balance,
               'warnings': this_customer.warnings,
-              'total_spending': total_spending
+              'total_spending': total_spending,
+              'VIP_status': this_customer.VIP_status
            }
 
         return render(request, 'customer/about.html', context)
@@ -48,8 +49,7 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def post(self, request, *args, **kwargs):
         funding = request.POST.get('funding')
-        print ("hello")
-        print (funding)
+
         if request.user.is_authenticated:
            this_customer = CustomerModel.objects.get(email__exact=request.user.email)
            this_customer.balance += Decimal(funding)
