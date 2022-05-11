@@ -8,26 +8,16 @@ from .models import MenuItem, Category, OrderModel, CustomerModel
 
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.utils.timezone import datetime
+from decimal import Decimal
 
 
 class Index(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/index.html')
 
-class Info(View):
-    def get(self, request, *args, **kwargs):
-        customers = OrderModel.objects.all()
-
-        context = {
-            'customers': customers,
-        }
-
-        return render(request, 'customer/info.html', context)
 
 class About(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
-
-        today = datetime.today()
 
         if request.user.is_authenticated:
            this_customer = CustomerModel.objects.get(email__exact=request.user.email)
@@ -49,18 +39,23 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
               'state': this_customer.state,
               'zip_code': this_customer.zip_code,
               'balance': this_customer.balance,
-               'warnings': this_customer.warnings,
-               'total_spending': total_spending
+              'warnings': this_customer.warnings,
+              'total_spending': total_spending
            }
 
         return render(request, 'customer/about.html', context)
 
 
-    def post(self, request, pk, *args, **kwargs):
-        data = json.loads(request.body)
+    def post(self, request, *args, **kwargs):
+        funding = request.POST.get('funding')
+        print ("hello")
+        print (funding)
+        if request.user.is_authenticated:
+           this_customer = CustomerModel.objects.get(email__exact=request.user.email)
+           this_customer.balance += Decimal(funding)
+           this_customer.save()
 
-        return render(request, 'customer/menu_display.html')
-
+        return redirect('about')
 
     def test_func(self):
         return self
@@ -94,7 +89,8 @@ class Customer_Info(View):
             city=city,
             state=state,
             zip_code=zip_code,
-            balance=balance
+            balance=balance,
+            orders_count=0
         )
 
         context = {
@@ -217,9 +213,22 @@ class OrderConfirmation(View):
         order = OrderModel.objects.get(pk=pk)
 
         this_customer = CustomerModel.objects.get(email__exact=order.email)
-        cur_balance = this_customer.balance - order.price
-        this_customer.balance = cur_balance
+        #cur_balance = this_customer.balance - order.price
+        this_customer.balance -= order.price
+        this_customer.orders_count += 1
+
+        if this_customer.orders_count % 3 == 0:
+           this_customer.delivery_fee = 0
         this_customer.save()
+
+
+
+        delivery_fee = 5
+        if this_customer.VIP_status:
+           delivery_fee = 0
+
+        if this_customer.delivery_fee == 0:
+           delivery_fee = 0
 
         context = {
             'pk': order.pk,
@@ -232,7 +241,8 @@ class OrderConfirmation(View):
             'city': order.city,
             'state': order.state,
             'zip_code': order.zip_code,
-            'cur_balance': cur_balance
+            'delivery_fee':delivery_fee,
+            'cur_balance': this_customer.balance
         }
 
         return render(request, 'customer/order_confirmation.html', context)
