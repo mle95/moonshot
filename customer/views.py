@@ -4,7 +4,7 @@ import json
 from django.shortcuts import render, redirect
 from django.views import View
 from django.core.mail import send_mail
-from .models import MenuItem, Category, OrderModel, CustomerModel
+from .models import MenuItem, Category, OrderModel, CustomerModel, DriverModel
 
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.utils.timezone import datetime
@@ -25,7 +25,7 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
            orders = OrderModel.objects.filter(email__exact=this_customer.email)
 
            total_spending = 0
-           # loop through the orders and calculate cumulative total amount
+           # loop through the orders to calculate cumulative total amount
            for order in orders:
                total_spending += order.price
 
@@ -52,6 +52,7 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
 
         if request.user.is_authenticated:
            this_customer = CustomerModel.objects.get(email__exact=request.user.email)
+           #update new funding (add more money)
            this_customer.balance += Decimal(funding)
            this_customer.save()
 
@@ -66,7 +67,7 @@ class Menu_Display(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/menu_display.html')
 
-
+#new customer sign-up
 class Customer_Info(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/customer_info.html')
@@ -79,6 +80,7 @@ class Customer_Info(View):
         city = request.POST.get('city')
         state = request.POST.get('state')
         zip_code = request.POST.get('zip')
+        #initial funding to account sign-up
         balance = request.POST.get('balance')
 
         customer = CustomerModel.objects.create(
@@ -100,6 +102,45 @@ class Customer_Info(View):
 
         return redirect('order')
 
+# Delivery guy sign-up
+class Driver_Info(View):
+    def get(self, request, *args, **kwargs):
+        orders = OrderModel.objects.all()
+
+        # pass this info to template 
+        # total number of orders 
+        context = {
+            'orders': orders,
+            'total_orders': len(orders)
+        }
+
+        return render(request, 'customer/orders_biddings.html', context)
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        street = request.POST.get('street')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zip_code = request.POST.get('zip')
+
+        customer = DriverModel.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            street=street,
+            city=city,
+            state=state,
+            zip_code=zip_code,
+            orders_count=0
+        )
+
+        context = {
+            'email': email,
+        }
+
+        return redirect('orders_biddings')
 
 
 
@@ -217,11 +258,12 @@ class OrderConfirmation(View):
         this_customer.balance -= order.price
         this_customer.orders_count += 1
 
+        # generate warnings here if orders cost exceed current balance
+
+
         if this_customer.orders_count % 3 == 0:
            this_customer.delivery_fee = 0
         this_customer.save()
-
-
 
         delivery_fee = 5
         if this_customer.VIP_status:
