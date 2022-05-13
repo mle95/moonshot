@@ -83,6 +83,7 @@ class Customer_Info(View):
         #initial funding to account sign-up
         balance = request.POST.get('balance')
 
+        # create new entry in database table
         customer = CustomerModel.objects.create(
             name=name,
             email=email,
@@ -210,6 +211,7 @@ class Order(View):
             price += item['price']
             item_ids.append(item['id'])
 
+        # create new entry in database table
         order = OrderModel.objects.create(
             price=price,
             name=name,
@@ -248,6 +250,7 @@ class Order(View):
            return redirect('order')
 
 
+#receipt for food order
 class OrderConfirmation(View):
     def get(self, request, pk, *args, **kwargs):
 
