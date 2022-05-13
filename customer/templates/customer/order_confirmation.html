@@ -5,19 +5,20 @@
 
     <div class="row justify-content-center mt-5">
         <div class="col-md-5 col-sm-12 text-left">
-            <h3 class="pb-3">Order Summary:</h3>
+            <h4 class="pb-3">Receipt</h4>
+            <h5 class="pb-3">Order Summary:</h5>
             {% for item in items.all %}
                 <p>{{ item.name }} <span class="pl-3"> &nbsp; ${{ item.price }}</span></p>
             {% endfor %}
 
-            <p class="font-weight-bold pt-4"><h6>Total: &nbsp; ${{ price }}</h6></p>
+            <p class="font-weight-bold pt-4"><h6>Total: ${{ price }}</h6></p>
 
             account current balance ${{ cur_balance }} <br> {{email}}
             <br><br>
             {% if cur_balance >= 0 %}
-            <h4>Payment is completed. <br>
+            <h5>Payment is completed. <br>
             Thanks :)
-            </h4>
+            </h5>
             {% endif %}
             {% if cur_balance == 0 %}
             <br>
