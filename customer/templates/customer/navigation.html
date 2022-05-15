@@ -1,6 +1,7 @@
 <!-- getbootstrap.com/docs/4.0/components/navbar/
 -->
-{% load account %} {% load i18n %}
+{% load account %} 
+{% load i18n %}
 
 <nav class="navbar navbar-expand-lg navbar-light indigo">
   <a class="navbar-brand" href="{% url 'index' %}">Food Connect</a>
@@ -37,7 +38,11 @@
 
     <table border="0" width="40%">
       <tr>
-        <td align="right">{{ user.email }}</td>
+        <td align="right">{{ user.email }}
+        {% if user.username == "admin" %}
+        <mark><b>Admin </b></mark>
+        {% endif %}
+        </td>
       </tr>
     </table>
   </div>
