@@ -23,6 +23,7 @@ class Category(models.Model):
 
 class OrderModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
+    order_id = models.IntegerField(blank=True, null=True)
     price = models.DecimalField(max_digits=4, decimal_places=2)
     items = models.ManyToManyField(
         'MenuItem', related_name='order', blank=True)
@@ -76,4 +77,13 @@ class DriverModel(models.Model):
     bidding_price = models.IntegerField(blank=True, null=False)
 
     def __str__(self):
-        return f'Customer: {self.created_on.strftime("%b %d %I: %M %p")}'
+        return f'Driver: {self.created_on.strftime("%b %d %I: %M %p")}'
+
+class BiddingsModel(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
+    order_id = models.IntegerField(blank=True)
+    driver_email = models.CharField(max_length=50, null=False)
+    delivery_price = models.IntegerField(blank=True)
+
+    def __str__(self):
+        return f'Biddings: {self.created_on.strftime("%b %d %I: %M %p")}'
