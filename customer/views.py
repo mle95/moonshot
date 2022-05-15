@@ -4,12 +4,12 @@ import json
 from django.shortcuts import render, redirect
 from django.views import View
 from django.core.mail import send_mail
-from .models import MenuItem, Category, OrderModel, CustomerModel, DriverModel
+from .models import MenuItem, Category, OrderModel, CustomerModel, DriverModel, BiddingsModel
 
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.utils.timezone import datetime
 from decimal import Decimal
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class Index(View):
     def get(self, request, *args, **kwargs):
@@ -144,6 +144,63 @@ class Driver_Info(View):
         return redirect('orders_biddings')
 
 
+# Delivery guy bidding on orders
+class Orders_Biddings(View):
+    def get(self, request, *args, **kwargs):
+        orders = OrderModel.objects.all()
+        orders_biddings = BiddingsModel.objects.all()
+
+        # pass this info to template 
+        # total number of orders 
+        context = {
+            'orders': orders,
+            'orders_biddings' : orders_biddings,
+            'total_orders': len(orders)
+        }
+
+        return render(request, 'customer/orders_biddings.html', context)
+
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get('email')
+
+
+        orders = request.POST.getlist('orders[]')
+        biddings = request.POST.getlist('biddings[]')
+
+        #orders_biddings['bid_price'].append(biddings)
+
+        if orders:
+           print("there are orders")
+        if biddings:
+           print("there are bids _____ ")
+
+        # biddings counting variable
+        k = 0
+        for bid in biddings:
+          if k >= len(orders):
+             break;   # no more biddings, terminate this for-loop
+          try: 
+             this_bid = BiddingsModel.objects.get(driver_email__exact=request.user.email, order_id__exact=orders[k])
+             print("try..")
+             length = len(bid)
+             if length > 0:
+                this_bid.delivery_price = int(bid)
+                this_bid.save()
+                k += 1
+
+          except ObjectDoesNotExist: 
+             length = len(bid)
+             if length > 0:
+                order = BiddingsModel.objects.create(
+                            order_id=orders[k],
+                            driver_email=request.user.email,
+                            delivery_price=int(bid)
+                )
+                k += 1   # biddings counting variable
+
+        return redirect('orders_biddings')
+
+
 
 class Order(View):
     def get(self, request, *args, **kwargs):
@@ -224,19 +281,6 @@ class Order(View):
             home_delivery=home_delivery,
         )
         order.items.add(*item_ids)
-
-        # After everything is done, send confirmation email to the user
-        body = ('Thank you for your order! Your food is being made and will be delivered soon!\n'
-                f'Your total: {price}\n'
-                'Thank you again for your order!')
-
-        send_mail(
-            'Thank You For Your Order!',
-            body,
-            'example@example.com',
-            [email],
-            fail_silently=False
-        )
 
         context = {
             'items': order_items['items'],
