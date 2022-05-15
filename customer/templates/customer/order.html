@@ -15,7 +15,6 @@ function validateCheckboxes() {
       document.getElementById("chk_option_error").style.visibility = "hidden";
       return true;
     }
-
 }
 </script>
 
@@ -30,7 +29,7 @@ function validateCheckboxes() {
                     <div class="row" justify-content-left>
                         <div class="col-md-2 col-sm-12">
                             <a href="{{ app.image.url }}" target="_blank">
-                            <img class="rounded" src="{{ app.image.url }}" width="180" height="160" alt="food photo"/>
+                            <img class="rounded" src="{{ app.image.url }}" width=160 height=120 alt="food photo"/>
                             </a>
                         </div>
                         <div class="col-md-8 col-sm-12">
@@ -53,7 +52,7 @@ function validateCheckboxes() {
                     <div class="row mt-4">
                         <div class="col-md-2 col-sm-12">
                             <a href="{{ entre.image.url }}" target="_blank">
-                            <img class="rounded" src="{{ entre.image.url }}" width="180" height="160" alt="food photo"/>
+                            <img class="rounded" src="{{ entre.image.url }}" width=160 height=120 alt="food photo"/>
                             </a>
                         </div>
                         <div class="col-md-8 col-sm-12">
@@ -135,7 +134,7 @@ function validateCheckboxes() {
        <h3>
        <mark>You must login before ordering food</mark>
        </h3>
-       <button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded" primaryAction" 
+       <button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded"
        onclick="document.location='/accounts/login/'">Login</button>
        {% endif %}
 
