@@ -1,11 +1,27 @@
 {% extends 'customer/base.html' %}
 
 {% block content %}
+
+<script type="text/javascript">
+function updateOrdersBiddings(number) {
+  var e = document.createElement("input");
+
+  e.setAttribute("type", "hidden");
+  e.setAttribute("name", "orders[]");
+  e.setAttribute("id", "orders[]");
+  e.setAttribute("value", number);
+
+  document.querySelector("form").appendChild(e);
+
+  return true;
+}
+</script>
+
     <div class="container">
         <div class="row justify-content-left">
             <div class="col-md-12 mt-5">
             Orders Biddings
-            <form method="POST">
+            <form method="POST" name="biddingsForm">
             {% csrf_token %}
                 <table class="table table-hover table-striped" border=1>
                     <thead>
@@ -26,7 +42,13 @@
                         {% for order in orders %}
                         <tr>
                             <th scope="row">{{ order.pk }}</th>
-                            <td><input type="number" id="current_bid" name="current_bid" min=1 max=99>
+                            <td><input type="text" 
+                            {% for current_bid in orders_biddings %}
+                               {% if current_bid.order_id == order.pk %}
+                               value={{ current_bid.delivery_price }}
+                               {% endif %}
+                            {% endfor %}
+                            onChange="updateOrdersBiddings({{ order.pk }})" id="biddings[]" name="biddings[]" min=1 max=99 size=2></td>
                             <td>${{ order.price }}</td>
                             <td> {{ order.name }}</td>
                             <td> {{ order.phone }}</td>
@@ -42,6 +64,7 @@
                 </table>
                 <button class="btn btn-rounded btn-light mt-5">Update biddings</button>
             </form>
+            <br><br><br>
             </div>
         </div>
     </div>
