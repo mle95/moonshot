@@ -18,6 +18,19 @@
             <br>
             Please <a href="{% url 'about' %}">add</a> more money!
             <br><br>
+            {% if warnings == 0 %}
+            <font color="red"><h5>First warning</h5></font>
+            {% endif %}
+
+            {% if warnings == 1 %}
+            <font color="red"><h5>Second warnings (reckless)</h5></font>
+            {% endif %}
+
+            {% if warnings >= 2 %}
+            <font color="red"><h5>Third warnings (this account is now closed)</h5></font>
+            {% endif %}
+
+            <br><br>
             {% if cur_balance == 0 %}
             <br>
             <h5>Remaining balance is now zero.</h5>
