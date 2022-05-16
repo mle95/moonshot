@@ -19,6 +19,9 @@ class Index(View):
 class About(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
 
+        if request.user.username == 'admin':
+           return render(request, 'customer/index.html')
+
         if request.user.is_authenticated:
            this_customer = CustomerModel.objects.get(email__exact=request.user.email)
 
@@ -67,6 +70,7 @@ class Menu_Display(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'customer/menu_display.html')
 
+
 #new customer sign-up
 class Customer_Info(View):
     def get(self, request, *args, **kwargs):
@@ -102,6 +106,7 @@ class Customer_Info(View):
         }
 
         return redirect('order')
+
 
 # Delivery guy sign-up
 class Driver_Info(View):
@@ -163,16 +168,20 @@ class Orders_Biddings(View):
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
 
-
         orders = request.POST.getlist('orders[]')
         biddings = request.POST.getlist('biddings[]')
+        customer_name = request.POST.getlist('customer_name[]')
+        customer_receipt = request.POST.getlist('customer_receipt[]')
+        customer_street = request.POST.getlist('customer_street[]')
+        customer_city = request.POST.getlist('customer_city[]')
+        customer_state = request.POST.getlist('customer_state[]')
+        customer_zip_code = request.POST.getlist('customer_zip_code[]')
 
-        #orders_biddings['bid_price'].append(biddings)
-
-        if orders:
-           print("there are orders")
-        if biddings:
-           print("there are bids _____ ")
+        #debug info
+        #if orders:
+        #   print("there are orders")
+        #if biddings:
+        #   print("there are bids ")
 
         # biddings counting variable
         k = 0
@@ -181,25 +190,116 @@ class Orders_Biddings(View):
              break;   # no more biddings, terminate this for-loop
           try: 
              this_bid = BiddingsModel.objects.get(driver_email__exact=request.user.email, order_id__exact=orders[k])
-             print("try..")
+             print("post() update entry _____________")
              length = len(bid)
              if length > 0:
                 this_bid.delivery_price = int(bid)
+                this_bid.customer_receipt = customer_receipt[k]
+                this_bid.customer_name = customer_name[k]
+                this_bid.customer_street = customer_street[k]
+                this_bid.customer_city = customer_city[k]
+                this_bid.customer_state = customer_state[k]
+                this_bid.customer_zip_code = customer_zip_code[k]
                 this_bid.save()
+                print ("save() update biddings")
                 k += 1
 
           except ObjectDoesNotExist: 
+             print("post() new entry____")
              length = len(bid)
              if length > 0:
-                order = BiddingsModel.objects.create(
+                this_bid = BiddingsModel.objects.create(
                             order_id=orders[k],
                             driver_email=request.user.email,
-                            delivery_price=int(bid)
+                            delivery_price=int(bid),
+                            customer_receipt=customer_receipt[k],
+                            customer_name=customer_name[k],
+                            customer_street=customer_street[k],
+                            customer_city=customer_city[k],
+                            customer_state=customer_state[k],
+                            customer_zip_code=customer_zip_code[k],
+
                 )
                 k += 1   # biddings counting variable
 
         return redirect('orders_biddings')
 
+# all biddings (manager view)
+class Orders_Biddings_All(View):
+    def get(self, request, *args, **kwargs):
+        #orders = OrderModel.objects.all()
+        orders_biddings = BiddingsModel.objects.all().order_by('order_id')
+
+
+        # pass this info to template 
+        # total number of orders 
+        context = {
+            'orders_biddings' : orders_biddings,
+        }
+
+        return render(request, 'customer/orders_biddings_all.html', context)
+
+    def post(self, request, *args, **kwargs):
+        orders = request.POST.getlist('orders[]')
+        biddings = request.POST.getlist('biddings[]')
+        driver_email = request.POST.getlist('driver_email[]')
+        customer_name = request.POST.getlist('customer_name[]')
+        customer_receipt = request.POST.getlist('customer_receipt[]')
+        customer_street = request.POST.getlist('customer_street[]')
+        customer_city = request.POST.getlist('customer_city[]')
+        customer_state = request.POST.getlist('customer_state[]')
+        customer_zip_code = request.POST.getlist('customer_zip_code[]')
+
+        print("post all_bids() \\\\")
+        if orders:
+           print("there are orders")
+        if biddings:
+           print("there are bids ")
+        if driver_email:
+           print("there are driver_email ")
+
+        # biddings counting variable
+        k = 0
+        for bid in biddings:
+          if k >= len(orders):
+             break;   # no more biddings, terminate this for-loop
+          try: 
+             print(driver_email[k])
+             this_bid = BiddingsModel.objects.get(driver_email__exact=driver_email[k], order_id__exact=orders[k])
+             print("post for-loop ")
+             length = len(bid)
+             if length > 0:
+                this_bid.delivery_price = int(bid)
+                this_bid.customer_receipt = customer_receipt[k]
+                this_bid.driver_email = driver_email[k]
+                this_bid.customer_name = customer_name[k]
+                this_bid.customer_street = customer_street[k]
+                this_bid.customer_city = customer_city[k]
+                this_bid.customer_state = customer_state[k]
+                this_bid.customer_zip_code = customer_zip_code[k]
+                this_bid.save()
+                print ("save() update biddings")
+                k += 1
+
+          except ObjectDoesNotExist: 
+             length = len(bid)
+             if length > 0:
+                this_bid = BiddingsModel.objects.create(
+                            order_id=orders[k],
+                            delivery_price=int(bid),
+                            driver_email=driver_email[k],
+                            customer_receipt=customer_receipt[k],
+                            customer_name=customer_name[k],
+                            customer_street=customer_street[k],
+                            customer_city=customer_city[k],
+                            customer_state=customer_state[k],
+                            customer_zip_code=customer_zip_code[k],
+
+                )
+                k += 1   # biddings counting variable
+                k += 1   # biddings counting variable
+
+        return redirect('orders_biddings_all')
 
 
 class Order(View):
@@ -210,7 +310,9 @@ class Order(View):
         desserts = MenuItem.objects.filter(category__name__contains='Dessert')
         drinks = MenuItem.objects.filter(category__name__contains='Drink')
 
-        #customers = CustomerModel.objects.all()
+        if request.user.username == 'admin':
+           return render(request, 'customer/menu_display.html')
+
         if request.user.is_authenticated:
            this_customer = CustomerModel.objects.get(email__exact=request.user.email)
 
