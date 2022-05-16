@@ -253,14 +253,17 @@ class Orders_Biddings_All(View):
         customer_state = request.POST.getlist('customer_state[]')
         customer_zip_code = request.POST.getlist('customer_zip_code[]')
 
+        # debug info  ##
         if orders:
            print("there are orders")
         if biddings:
            print("there are bids ")
         if driver_assigned:
            print("there are drivers assigned")
+        # debug   ######
 
         driver_is_assigned = False
+
         # biddings counting variable
         k = 0
         for bid in biddings:
@@ -387,6 +390,22 @@ class Order(View):
             price += item['price']
             item_ids.append(item['id'])
 
+        this_customer = CustomerModel.objects.get(email__exact=request.user.email)
+        context = {
+            'items': order_items['items'],
+            'price': price,
+            'cur_balance': this_customer.balance,
+            'email': this_customer.email,
+            'home_delivery': home_delivery
+        }
+
+        # if new order cost is more than account balance, reject this order now
+        if price > this_customer.balance:
+           this_customer.warnings += 1    #add one warning
+           if this_customer.warnings > 2:
+              this_customer.VIP_status = 0    # downgrade account status to regular
+           return render(request, 'customer/order-reject.html', context)
+
         # create new entry in database table
         order = OrderModel.objects.create(
             price=price,
@@ -401,12 +420,6 @@ class Order(View):
         )
         order.items.add(*item_ids)
 
-        context = {
-            'items': order_items['items'],
-            'price': price,
-            'home_delivery': home_delivery
-        }
-
         if price > 0:
            return redirect('order-confirmation', pk=order.pk)
         else:
@@ -420,7 +433,6 @@ class OrderConfirmation(View):
         order = OrderModel.objects.get(pk=pk)
 
         this_customer = CustomerModel.objects.get(email__exact=order.email)
-        #cur_balance = this_customer.balance - order.price
         this_customer.balance -= order.price
         this_customer.orders_count += 1
 
