@@ -1,0 +1,154 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+
+<script type="text/javascript">
+function updateOrdersBiddings(number, receipt, driver_email, name, street, city, state, zip_code) {
+  alert(driver_email);
+
+  var order_number = document.createElement("input");
+  var customer_receipt = document.createElement("input");
+  var driver_email = document.createElement("input");
+  var customer_name = document.createElement("input");
+  var customer_street = document.createElement("input");
+  var customer_city = document.createElement("input");
+  var customer_state = document.createElement("input");
+  var customer_zip_code = document.createElement("input");
+
+  order_number.setAttribute("type", "hidden");
+  order_number.setAttribute("name", "orders[]");
+  order_number.setAttribute("id", "orders[]");
+  order_number.setAttribute("value", number);
+
+  customer_receipt.setAttribute("type", "hidden");
+  customer_receipt.setAttribute("name", "customer_receipt[]");
+  customer_receipt.setAttribute("id", "customer_receipt[]");
+  customer_receipt.setAttribute("value", receipt);
+
+  driver_email.setAttribute("type", "hidden");
+  driver_email.setAttribute("name", "driver_email[]");
+  driver_email.setAttribute("id", "driver_email[]");
+  driver_email.setAttribute("value", driver_email);
+
+  customer_name.setAttribute("type", "hidden");
+  customer_name.setAttribute("name", "customer_name[]");
+  customer_name.setAttribute("id", "customer_name[]");
+  customer_name.setAttribute("value", name);
+
+  customer_street.setAttribute("type", "hidden");
+  customer_street.setAttribute("name", "customer_street[]");
+  customer_street.setAttribute("id", "customer_street[]");
+  customer_street.setAttribute("value", street);
+
+  customer_city.setAttribute("type", "hidden");
+  customer_city.setAttribute("name", "customer_city[]");
+  customer_city.setAttribute("id", "customer_city[]");
+  customer_city.setAttribute("value", city);
+
+  customer_state.setAttribute("type", "hidden");
+  customer_state.setAttribute("name", "customer_state[]");
+  customer_state.setAttribute("id", "customer_state[]");
+  customer_state.setAttribute("value", state);
+
+  customer_zip_code.setAttribute("type", "hidden");
+  customer_zip_code.setAttribute("name", "customer_zip_code[]");
+  customer_zip_code.setAttribute("id", "customer_zip_code[]");
+  customer_zip_code.setAttribute("value", zip_code);
+
+  document.querySelector("form").appendChild(order_number);
+  document.querySelector("form").appendChild(customer_receipt);
+  document.querySelector("form").appendChild(driver_email);
+  document.querySelector("form").appendChild(customer_name);
+  document.querySelector("form").appendChild(customer_street);
+  document.querySelector("form").appendChild(customer_city);
+  document.querySelector("form").appendChild(customer_state);
+  document.querySelector("form").appendChild(customer_zip_code);
+
+  return true;
+}
+</script>
+
+{% load account %}
+{% load i18n %}
+    {% if user.is_authenticated %}
+
+    <div class="container">
+        <div class="row justify-content-left">
+            <div class="col-md-12 mt-5">
+            Orders Biddings (Manager View)
+            <form method="POST" name="biddingsForm">
+            {% csrf_token %}
+                <table class="table table-hover table-striped" border=1>
+                    <thead>
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Biddings</th>
+                            <th scope="col">Select</th>
+                            <th scope="col">Driver assigned</th>
+                            <th scope="col">Receipt</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Street address</th>
+                            <th scope="col">City</th>
+                            <th scope="col">State</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for bid in orders_biddings %}
+                        <tr>
+                            <th scope="row">{{ bid.order_id }}</th>
+                            <td><input type="text" 
+                            value="{{ bid.delivery_price }}"
+                            onChange="updateOrdersBiddings({{ bid.order_id }},
+                                     '{{ bid.delivery_price }}',
+                                     '{{ bid.driver_email }}',
+                                     '{{ bid.customer_name }}',
+                                     '{{ bid.customer_street }}',
+                                     '{{ bid.customer_city }}',
+                                     '{{ bid.customer_state }}',
+                                      {{ bid.customer_zip_code }}
+                                      )" id="biddings[]" name="biddings[]" min=1 max=99 size=1></td>
+
+                            <td> <input type="checkbox" 
+                            onChange="updateOrdersBiddings({{ bid.order_id }},
+                                     '{{ bid.delivery_price }}',
+                                     '{{ bid.driver_email }}',
+                                     '{{ bid.customer_name }}',
+                                     '{{ bid.customer_street }}',
+                                     '{{ bid.customer_city }}',
+                                     '{{ bid.customer_state }}',
+                                      {{ bid.customer_zip_code }}
+                                      )" id="assigned[]" name="assigned[]"> </td>
+                            <td> {{ bid.driver_email }}</td>
+                            <td>${{ bid.customer_receipt }}</td>
+                            <td> {{ bid.customer_name }}</td>
+                            <td> {{ bid.customer_street }}</td>
+                            <td> {{ bid.customer_city }}</td>
+                            <td> {{ bid.customer_state }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button class="btn btn-rounded btn-light mt-5">Update</button>
+            </form>
+            <br><br><br>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+<div class="container">
+    <div class="col-md-12 mt-5">
+    {% if not user.is_authenticated %}
+    <br>
+    <h3>
+    <mark>You must login to bid on orders</mark>
+    </h3>
+    <button style="background-color:#0099ff" type="button" class="btn btn-primary btn-rounded"
+    onclick="document.location='/accounts/login/'">Login</button>
+    {% endif %}
+    </div>
+</div>
+
+
+{% endblock content %}
