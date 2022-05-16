@@ -171,6 +171,7 @@ class Orders_Biddings(View):
         orders = request.POST.getlist('orders[]')
         biddings = request.POST.getlist('biddings[]')
         customer_name = request.POST.getlist('customer_name[]')
+        customer_email = request.POST.getlist('customer_email[]')
         customer_receipt = request.POST.getlist('customer_receipt[]')
         customer_street = request.POST.getlist('customer_street[]')
         customer_city = request.POST.getlist('customer_city[]')
@@ -195,6 +196,7 @@ class Orders_Biddings(View):
              if length > 0:
                 this_bid.delivery_price = int(bid)
                 this_bid.customer_receipt = customer_receipt[k]
+                this_bid.customer_email = customer_email[k]
                 this_bid.customer_name = customer_name[k]
                 this_bid.customer_street = customer_street[k]
                 this_bid.customer_city = customer_city[k]
@@ -213,6 +215,7 @@ class Orders_Biddings(View):
                             driver_email=request.user.email,
                             delivery_price=int(bid),
                             customer_receipt=customer_receipt[k],
+                            customer_email=customer_email[k],
                             customer_name=customer_name[k],
                             customer_street=customer_street[k],
                             customer_city=customer_city[k],
@@ -230,7 +233,6 @@ class Orders_Biddings_All(View):
         #orders = OrderModel.objects.all()
         orders_biddings = BiddingsModel.objects.all().order_by('order_id')
 
-
         # pass this info to template 
         # total number of orders 
         context = {
@@ -243,6 +245,7 @@ class Orders_Biddings_All(View):
         orders = request.POST.getlist('orders[]')
         biddings = request.POST.getlist('biddings[]')
         driver_email = request.POST.getlist('driver_email[]')
+        driver_assigned = request.POST.getlist('assigned[]')
         customer_name = request.POST.getlist('customer_name[]')
         customer_receipt = request.POST.getlist('customer_receipt[]')
         customer_street = request.POST.getlist('customer_street[]')
@@ -250,28 +253,37 @@ class Orders_Biddings_All(View):
         customer_state = request.POST.getlist('customer_state[]')
         customer_zip_code = request.POST.getlist('customer_zip_code[]')
 
-        print("post all_bids() \\\\")
         if orders:
            print("there are orders")
         if biddings:
            print("there are bids ")
-        if driver_email:
-           print("there are driver_email ")
+        if driver_assigned:
+           print("there are drivers assigned")
 
+        driver_is_assigned = False
         # biddings counting variable
         k = 0
         for bid in biddings:
           if k >= len(orders):
              break;   # no more biddings, terminate this for-loop
           try: 
-             print(driver_email[k])
-             this_bid = BiddingsModel.objects.get(driver_email__exact=driver_email[k], order_id__exact=orders[k])
+             #this_bid = BiddingsModel.objects.get(driver_email__exact=driver_email[k], order_id__exact=orders[k])
+             this_bid = BiddingsModel.objects.get(order_id__exact=orders[k])
              print("post for-loop ")
+             print("Driver assigned value")
+             print(driver_assigned)
+             if driver_assigned:
+                if driver_assigned[k] == 'on':
+                   driver_is_assigned = True
+
              length = len(bid)
+             print ("==================================")
+             print (driver_is_assigned)
              if length > 0:
                 this_bid.delivery_price = int(bid)
                 this_bid.customer_receipt = customer_receipt[k]
-                this_bid.driver_email = driver_email[k]
+                #this_bid.driver_email = driver_email[k]
+                this_bid.assigned=driver_is_assigned
                 this_bid.customer_name = customer_name[k]
                 this_bid.customer_street = customer_street[k]
                 this_bid.customer_city = customer_city[k]
@@ -282,12 +294,18 @@ class Orders_Biddings_All(View):
                 k += 1
 
           except ObjectDoesNotExist: 
+             print("driver assigned value")
+             print(driver_assigned)
+             if driver_assigned[k] == 'on':
+                driver_is_assigned = True
+
              length = len(bid)
              if length > 0:
                 this_bid = BiddingsModel.objects.create(
                             order_id=orders[k],
                             delivery_price=int(bid),
-                            driver_email=driver_email[k],
+                            #driver_email=driver_email[k],
+                            assigned=driver_is_assigned,
                             customer_receipt=customer_receipt[k],
                             customer_name=customer_name[k],
                             customer_street=customer_street[k],
@@ -296,7 +314,6 @@ class Orders_Biddings_All(View):
                             customer_zip_code=customer_zip_code[k],
 
                 )
-                k += 1   # biddings counting variable
                 k += 1   # biddings counting variable
 
         return redirect('orders_biddings_all')
