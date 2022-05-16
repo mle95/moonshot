@@ -1,0 +1,55 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<div class="container mb-5">
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5 col-sm-12 text-left">
+            <h3 class="pb-3">Order is rejected</h3>
+            <h5 class="pb-3">Order Summary:</h5>
+            {% for item in items %}
+                <p>{{ item.name }}: <span class="pl-3"> ${{ item.price }}</span></p>
+            {% endfor %}
+
+            <p class="font-weight-bold pt-4"><h6>Total: ${{ price }}</h6></p>
+
+            <br>
+            account current balance ${{ cur_balance }} <br> {{email}}
+            <br>
+            Please <a href="{% url 'about' %}">add</a> more money!
+            <br><br>
+            {% if cur_balance == 0 %}
+            <br>
+            <h5>Remaining balance is now zero.</h5>
+            {% endif %}
+            {% if cur_balance < 0 %}
+            <h4>Your balance is below zero.</h4>
+            {% endif %}
+            <br><br><br><br>
+            <hr>
+            Restaurant address: <br>
+            160 Convent Ave, New York, NY 10037
+        </div>
+
+    </div>
+
+    {% if cur_balance < 0 %}
+    <div class="row justify-content-center pb-2 pt-5">
+        <div class="col-md-6 text-center">
+            <h4>Pay Now or Pay With Cash At Delivery</h4>
+        </div>
+    </div>
+    <div class="row justify-content-center pb-5">
+        <div class="col-md-6 text-center">
+            <div id="paypal-button"></div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if cur_balance < 0 %}
+
+{% endif %}
+
+
+{% endblock content %}
