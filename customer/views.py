@@ -395,6 +395,7 @@ class Order(View):
             'items': order_items['items'],
             'price': price,
             'cur_balance': this_customer.balance,
+            'warnings': this_customer.warnings,
             'email': this_customer.email,
             'home_delivery': home_delivery
         }
@@ -404,6 +405,10 @@ class Order(View):
            this_customer.warnings += 1    #add one warning
            if this_customer.warnings > 2:
               this_customer.VIP_status = 0    # downgrade account status to regular
+
+           print("customer.warnings count")
+           print(this_customer.warnings)
+           this_customer.save()
            return render(request, 'customer/order-reject.html', context)
 
         # create new entry in database table
@@ -461,6 +466,7 @@ class OrderConfirmation(View):
             'city': order.city,
             'state': order.state,
             'zip_code': order.zip_code,
+            'home_delivery': order.home_delivery,
             'delivery_fee':delivery_fee,
             'cur_balance': this_customer.balance
         }
