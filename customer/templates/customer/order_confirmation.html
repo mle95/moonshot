@@ -31,10 +31,18 @@
         <div class="col-md-5 col-sm-12 text-right">
             <h5>Phone Number</h5> {{ phone }} 
             <br><br>
+
+            {% if home_delivery %}
             <h5>Delivery address</h5>
             {{ name }}
             <br>{{ street }}
             <br>{{ city }}, {{ state }} {{ zip_code }}
+
+            {% else %}
+            <b>Pick-up at restaurant</b>
+            <br>
+            pick-up time in 10 minutes <i>(estimate)</i>
+            {% endif %}
             <br><br>
             <hr>
             Restaurant address: <br>
