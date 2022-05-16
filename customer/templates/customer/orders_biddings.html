@@ -3,15 +3,65 @@
 {% block content %}
 
 <script type="text/javascript">
-function updateOrdersBiddings(number) {
-  var e = document.createElement("input");
+function updateOrdersBiddings(number, receipt, name, customer_email, street, city, state, zip_code) {
 
-  e.setAttribute("type", "hidden");
-  e.setAttribute("name", "orders[]");
-  e.setAttribute("id", "orders[]");
-  e.setAttribute("value", number);
+  var order_number = document.createElement("input");
+  var customer_receipt = document.createElement("input");
+  var customer_name = document.createElement("input");
+  var customer_email = document.createElement("input");
+  var customer_street = document.createElement("input");
+  var customer_city = document.createElement("input");
+  var customer_state = document.createElement("input");
+  var customer_zip_code = document.createElement("input");
 
-  document.querySelector("form").appendChild(e);
+  order_number.setAttribute("type", "hidden");
+  order_number.setAttribute("name", "orders[]");
+  order_number.setAttribute("id", "orders[]");
+  order_number.setAttribute("value", number);
+
+  customer_receipt.setAttribute("type", "hidden");
+  customer_receipt.setAttribute("name", "customer_receipt[]");
+  customer_receipt.setAttribute("id", "customer_receipt[]");
+  customer_receipt.setAttribute("value", receipt);
+
+  customer_name.setAttribute("type", "hidden");
+  customer_name.setAttribute("name", "customer_name[]");
+  customer_name.setAttribute("id", "customer_name[]");
+  customer_name.setAttribute("value", name);
+
+  customer_email.setAttribute("type", "hidden");
+  customer_email.setAttribute("name", "customer_email[]");
+  customer_email.setAttribute("id", "customer_email[]");
+  customer_email.setAttribute("value", customer_email);
+
+  customer_street.setAttribute("type", "hidden");
+  customer_street.setAttribute("name", "customer_street[]");
+  customer_street.setAttribute("id", "customer_street[]");
+  customer_street.setAttribute("value", street);
+
+  customer_city.setAttribute("type", "hidden");
+  customer_city.setAttribute("name", "customer_city[]");
+  customer_city.setAttribute("id", "customer_city[]");
+  customer_city.setAttribute("value", city);
+
+  customer_state.setAttribute("type", "hidden");
+  customer_state.setAttribute("name", "customer_state[]");
+  customer_state.setAttribute("id", "customer_state[]");
+  customer_state.setAttribute("value", state);
+
+  customer_zip_code.setAttribute("type", "hidden");
+  customer_zip_code.setAttribute("name", "customer_zip_code[]");
+  customer_zip_code.setAttribute("id", "customer_zip_code[]");
+  customer_zip_code.setAttribute("value", zip_code);
+
+  document.querySelector("form").appendChild(order_number);
+  document.querySelector("form").appendChild(customer_receipt);
+  document.querySelector("form").appendChild(customer_email);
+  document.querySelector("form").appendChild(customer_name);
+  document.querySelector("form").appendChild(customer_street);
+  document.querySelector("form").appendChild(customer_city);
+  document.querySelector("form").appendChild(customer_state);
+  document.querySelector("form").appendChild(customer_zip_code);
 
   return true;
 }
@@ -24,7 +74,7 @@ function updateOrdersBiddings(number) {
     <div class="container">
         <div class="row justify-content-left">
             <div class="col-md-12 mt-5">
-            Orders Biddings
+            Orders Biddings _
             <form method="POST" name="biddingsForm">
             {% csrf_token %}
                 <table class="table table-hover table-striped" border=1>
@@ -35,7 +85,7 @@ function updateOrdersBiddings(number) {
                             <th scope="col">Receipt</th>
                             <th scope="col">Name</th>
                             <th scope="col">Phone</th>
-                            <th scope="col">Street</th>
+                            <th scope="col">Street address</th>
                             <th scope="col">City</th>
                             <th scope="col">State</th>
                             <th scope="col">Zip</th>
@@ -49,10 +99,23 @@ function updateOrdersBiddings(number) {
                             <td><input type="text" 
                             {% for current_bid in orders_biddings %}
                                {% if current_bid.order_id == order.pk %}
-                               value={{ current_bid.delivery_price }}
+
+                                  {% if current_bid.driver_email == user.email %}
+                                     value={{ current_bid.delivery_price }}
+                                  {% endif %}
                                {% endif %}
                             {% endfor %}
-                            onChange="updateOrdersBiddings({{ order.pk }})" id="biddings[]" name="biddings[]" min=1 max=99 size=2></td>
+                            onChange="updateOrdersBiddings({{ order.pk }}, 
+                                     '{{ order.price }}', 
+                                     '{{ order.name }}',
+                                     '{{ order.email }}',
+                                     '{{ order.street }}',
+                                     '{{ order.city }}',
+                                     '{{ order.state }}',
+                                      {{ order.zip_code }}
+                                      );" 
+                            id="biddings[]" name="biddings[]" min=1 max=99 size=1></td>
+
                             <td>${{ order.price }}</td>
                             <td> {{ order.name }}</td>
                             <td> {{ order.phone }}</td>
@@ -60,8 +123,6 @@ function updateOrdersBiddings(number) {
                             <td> {{ order.city }}</td>
                             <td> {{ order.state }}</td>
                             <td> {{ order.zip_code }}</td>
-
-                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
