@@ -4,7 +4,6 @@
 
 <script type="text/javascript">
 function updateOrdersBiddings(number, receipt, driver_email, name, street, city, state, zip_code) {
-  alert(driver_email);
 
   var order_number = document.createElement("input");
   var customer_receipt = document.createElement("input");
@@ -100,7 +99,7 @@ function updateOrdersBiddings(number, receipt, driver_email, name, street, city,
                             <td><input type="text" 
                             value="{{ bid.delivery_price }}"
                             onChange="updateOrdersBiddings({{ bid.order_id }},
-                                     '{{ bid.delivery_price }}',
+                                     '{{ bid.customer_receipt }}',
                                      '{{ bid.driver_email }}',
                                      '{{ bid.customer_name }}',
                                      '{{ bid.customer_street }}',
@@ -111,20 +110,24 @@ function updateOrdersBiddings(number, receipt, driver_email, name, street, city,
 
                             <td> <input type="checkbox" 
                             onChange="updateOrdersBiddings({{ bid.order_id }},
-                                     '{{ bid.delivery_price }}',
+                                     '{{ bid.customer_receipt }}',
                                      '{{ bid.driver_email }}',
                                      '{{ bid.customer_name }}',
                                      '{{ bid.customer_street }}',
                                      '{{ bid.customer_city }}',
                                      '{{ bid.customer_state }}',
                                       {{ bid.customer_zip_code }}
-                                      )" id="assigned[]" name="assigned[]"> </td>
+                                      )" id="assigned[]" name="assigned[]" 
+                                      {% if bid.assigned == True %}
+                                         checked
+                                      {% endif %}
+                                      "> </td>
                             <td> {{ bid.driver_email }}</td>
                             <td>${{ bid.customer_receipt }}</td>
                             <td> {{ bid.customer_name }}</td>
                             <td> {{ bid.customer_street }}</td>
                             <td> {{ bid.customer_city }}</td>
-                            <td> {{ bid.customer_state }}</td>
+                            <td> {{ bid.customer_state }} </td>
                         </tr>
                         {% endfor %}
                     </tbody>
