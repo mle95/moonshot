@@ -4,11 +4,7 @@ This is the final project for CSc 322 which is an online food delivery applicati
 ## Project name
 Moonshot
 ## Project members:
-Minh Le (mle003@citymail.cuny.edu)
-Vinuk Ranaweera (vranawe000@citymail.cuny.edu)
-Khanh Huang (khuang006@citymail.cuny.edu)
-Tea Nurcellari (tnurcel000@citymail.cuny.edu)
-Yauheni Patapau (ypatapa000@citymail.cuny.edu)
+Minh Le, Vinuk Ranaweera, Khanh Huang, Tea Nurcellari, Yauheni Patapau 
 
 ## Description:
 ## Project Documentation:
