@@ -38,6 +38,7 @@ class OrderModel(models.Model):
     home_delivery = models.BooleanField(default=True)
     home_delivery_completed = models.BooleanField(default=False)
     bidding = models.IntegerField(blank=True, null=True)
+    driver_email = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
@@ -54,7 +55,7 @@ class CustomerModel(models.Model):
     zip_code = models.IntegerField(blank=True, null=True)
     balance = models.DecimalField(max_digits=5, decimal_places=2)
     VIP_status = models.IntegerField(blank=True, null=True)
-    warnings = models.IntegerField(blank=True, null=True)
+    warnings = models.IntegerField(default=0, null=False)
     orders_count = models.IntegerField(default=0, null=False)
     total_spending = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     delivery_fee = models.BooleanField(default=True)
@@ -83,7 +84,17 @@ class BiddingsModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     order_id = models.IntegerField(blank=True)
     driver_email = models.CharField(max_length=50, null=False)
-    delivery_price = models.IntegerField(blank=True)
+    delivery_price = models.IntegerField(blank=True, null=True)
+    customer_receipt = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    assigned = models.BooleanField(blank=True, null=True)
+    customer_name = models.CharField(max_length=50, blank=True)
+    customer_email = models.CharField(max_length=50, null=True)
+    customer_phone = models.CharField(max_length=50, blank=True)
+    customer_street = models.CharField(max_length=50, blank=True)
+    customer_city = models.CharField(max_length=50, blank=True)
+    customer_state = models.CharField(max_length=15, blank=True)
+    customer_zip_code = models.IntegerField(blank=True, null=True)
+    home_delivery_completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Biddings: {self.created_on.strftime("%b %d %I: %M %p")}'
