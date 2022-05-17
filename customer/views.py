@@ -396,6 +396,9 @@ class Order(View):
         # $5 delivery charge
         delivery_fee = 5
 
+        
+
+
         this_customer = CustomerModel.objects.get(email__exact=request.user.email)
 
         this_customer.orders_count += 1
@@ -413,6 +416,18 @@ class Order(View):
         if this_customer.orders_count % 3 == 0:
            delivery_fee = 0
 
+
+        print("home_deliver2")
+        print (home_delivery)
+
+        if home_delivery == False:
+            delivery_fee = 0
+            print("home_delivery_executed")
+
+        print("home_delivery")
+        print (home_delivery)
+
+
         discount = 0
         if this_customer.VIP_status > 0:
            delivery_fee = 0
@@ -420,7 +435,9 @@ class Order(View):
            discount = int((float(price) * 0.05))
            print("discount")
            print(discount)
-           price = price - discount - delivery_fee
+           price = price - discount
+
+        price = price + delivery_fee
 
         context = {
             'items': order_items['items'],
