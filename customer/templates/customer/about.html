@@ -1,63 +1,58 @@
-{% extends 'customer/base.html' %}
+{% extends 'customer/base.html' %} {% block content %} {% load account %}
 
-{% block content %} 
 
-{% load account %}
-{% load i18n %}
-
-<h4>Online Food Ordering (customer profile)</h4>
+<h4>Customer Profile</h4>
 
 {% if user.is_authenticated %}
-  <table cellpadding=30 width="50%" border=0><tr><td> 
-  {{ user.first_name }} {{ user.last_name }} <br>
-  {{ phone }} <br>
-  {{ email }} <br>
+<table cellpadding="30" width="50%" border="0">
+  <tr>
+    <td>
+      {{ user.first_name }} {{ user.last_name }} <br />
+      {{ phone }} <br />
+      {{ email }} <br />
 
-  <br>
-  {{ street }} <br>
-  {{ city }}, {{ state }} {{ zip_code }} <br>
-  <hr>
+      <br />
+      {{ street }} <br />
+      {{ city }}, {{ state }} {{ zip_code }} <br />
+      <hr />
 
-<table width="100%" border=0><tr><td valign="bottom">
-current balance is <b> ${{ balance }} </b> </td>
-<td>
-  <form method="POST">
-  {% csrf_token %}
-  <input required type="number" id="funding" name="funding" min=1 max=1000>
-  <button class="btn btn-rounded btn-light mt-5">Add money</button>
-  </form>
-</td>
-</tr>
+      <table width="100%" border="0">
+        <tr>
+          <td valign="bottom">current balance is <b> ${{ balance }} </b></td>
+          <td>
+            <form method="POST">
+              {% csrf_token %}
+              <input
+                required
+                type="number"
+                id="funding"
+                name="funding"
+                min="1"
+                max="1000"
+              />
+              <button class="btn btn-rounded btn-light mt-5">Add money</button>
+            </form>
+          </td>
+        </tr>
+      </table>
+
+      <br />
+
+      {% if orders %} Orders history <br /><br />
+      {% endif %} {% for order in orders %} {% if order.email == user.email %}
+      {{ order.created_on}} <br />
+
+      {% for item in order.items.all %} {{ item.name }} ${{ item.price }} <br />
+      {% endfor %}
+      <br />
+
+      {% endif %} {% endfor %}
+    </td>
+  </tr>
 </table>
-
-<br>
-
-  {% if orders %}
-  Orders history <br><br>
-  {% endif %}
-
-  {% for order in orders %}
-  {% if order.email == user.email %}
-     {{ order.created_on}} <br>
-
-     {% for item in order.items.all %}
-        {{ item.name }} ${{ item.price }} <br>
-     {% endfor %}
-     <br>
-
-  {% endif %}
-  {% endfor %}
-  </td></tr></table>
 
 {% endif %}
 
-<br><br>
-
-<h4>show more info?</h4>
-
-more text here...
-<br><br>
-more text here...
-
+<br /><br />
 
 {% endblock content %}
