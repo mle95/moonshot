@@ -38,7 +38,12 @@
                                                     <ul class="zn-menu-items">
                                                         <li><a href="/menu_display">Menu</a></li>
                                                         <li><a href="/accounts/login/?next=/about/">Customer info</a></li>
+
+                                                        {% if not user.is_authenticated %}
                                                         <li><a href="/accounts/login/">Login & Sign up</a></li>
+                                                        {% endif %}
+
+                                                        <li><a href="/orders_biddings/">Drivers biddings</a></li>
                                                         <li><a href="/admin">Admin login</a></li>
                                                     </ul>
                                                     <ul class="zn-menu__social">
