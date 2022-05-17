@@ -1,9 +1,9 @@
-This is the final project for CSc 322 which is an online food delivery application.
 ## Project name
 Moonshot
 ## Project members
 Minh Le, Vinuk Ranaweera, Tea Nurcellari, Yauheni Patapau, Khanh Huang
 ## Description:
+This is the final project for CSc 322 which is an online food delivery application.
 ## How to run the project:
 
 (For Ubuntu/ Linux):
