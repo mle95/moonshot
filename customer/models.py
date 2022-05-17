@@ -35,6 +35,8 @@ class OrderModel(models.Model):
     state = models.CharField(max_length=15, blank=True)
     zip_code = models.IntegerField(blank=True, null=True)
     is_paid = models.BooleanField(default=False)
+    delivery_fee = models.IntegerField(blank=True, null=True)
+    discount = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     home_delivery = models.BooleanField(default=True)
     home_delivery_completed = models.BooleanField(default=False)
     bidding = models.IntegerField(blank=True, null=True)
@@ -58,7 +60,6 @@ class CustomerModel(models.Model):
     warnings = models.IntegerField(default=0, null=False)
     orders_count = models.IntegerField(default=0, null=False)
     total_spending = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    delivery_fee = models.BooleanField(default=True)
     blacklist = models.BooleanField(default=False)
 
     def __str__(self):
