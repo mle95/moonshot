@@ -12,8 +12,11 @@
             {% endfor %}
 
             
-
+            {% if VIP_status == 0%}
+            <br>Delivery fee: $5<br>
+            {%endif%}
             <p class="font-weight-bold pt-4"><h6>Total: ${{ price }}</h6></p>
+      
 
             account current balance ${{ cur_balance }} <br> {{email}}
             <br><br>

@@ -44,7 +44,8 @@ class About(LoginRequiredMixin, UserPassesTestMixin, View):
               'balance': this_customer.balance,
               'warnings': this_customer.warnings,
               'total_spending': total_spending,
-              'VIP_status': this_customer.VIP_status
+              'VIP_status': this_customer.VIP_status,
+              'orders_count': this_customer.orders_count
            }
 
         return render(request, 'customer/about.html', context)
@@ -84,6 +85,8 @@ class Customer_Info(View):
         city = request.POST.get('city')
         state = request.POST.get('state')
         zip_code = request.POST.get('zip')
+        VIP_status = 0
+        orders_count = 0
         #initial funding to account sign-up
         balance = request.POST.get('balance')
 
@@ -97,7 +100,8 @@ class Customer_Info(View):
             state=state,
             zip_code=zip_code,
             balance=balance,
-            orders_count=0
+            VIP_status = VIP_status,
+            orders_count = orders_count
         )
 
         context = {
@@ -321,6 +325,7 @@ class Orders_Biddings_All(View):
 
         return redirect('orders_biddings_all')
 
+delivery_fee = 5
 
 class Order(View):
     def get(self, request, *args, **kwargs):
@@ -383,12 +388,19 @@ class Order(View):
 
             order_items['items'].append(item_data)
 
+        
+
         price = 0
+        
+        
+
         item_ids = []
 
         for item in order_items['items']:
             price += item['price']
             item_ids.append(item['id'])
+
+        price = price + delivery_fee
 
         this_customer = CustomerModel.objects.get(email__exact=request.user.email)
         context = {
@@ -399,6 +411,18 @@ class Order(View):
             'email': this_customer.email,
             'home_delivery': home_delivery
         }
+
+        this_customer.orders_count = this_customer.orders_count + 1
+
+
+        if this_customer.orders_count >= 5:
+            this_customer.VIP_status = 5
+            this_customer.save()
+
+
+        if this_customer.VIP_status > 0:
+            price = price - (int(float(price) * 0.05)) - delivery_fee
+        
 
         # if new order cost is more than account balance, reject this order now
         if price > this_customer.balance:
@@ -450,12 +474,9 @@ class OrderConfirmation(View):
            this_customer.delivery_fee = 0
         this_customer.save()
 
-        delivery_fee = 5
-        if this_customer.VIP_status:
-           delivery_fee = 0
 
-        if this_customer.delivery_fee == 0:
-           delivery_fee = 0
+        # if this_customer.delivery_fee == 0:
+        #    delivery_fee = 0
 
         context = {
             'pk': order.pk,
@@ -470,6 +491,7 @@ class OrderConfirmation(View):
             'zip_code': order.zip_code,
             'home_delivery': order.home_delivery,
             'delivery_fee':delivery_fee,
+            'VIP_status':this_customer.VIP_status,
             'cur_balance': this_customer.balance
         }
 

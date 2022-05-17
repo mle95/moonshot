@@ -7,6 +7,13 @@
 <table cellpadding="30" width="50%" border="0">
   <tr>
     <td>
+      
+      {% if VIP_status > 0%}
+        You're VIP <br />
+      {%endif%}
+
+     
+
       {{ user.first_name }} {{ user.last_name }} <br />
       {{ phone }} <br />
       {{ email }} <br />
