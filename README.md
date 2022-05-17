@@ -5,7 +5,6 @@ Moonshot
 Minh Le, Vinuk Ranaweera, Tea Nurcellari, Yauheni Patapau, Khanh Huang
 ## Description:
 ## How to run the project:
-- Download python from https://www.python.org/downloads/ which will give you the latest version.
 
 (For Ubuntu/ Linux):
 - Clone the git repository by entering:  git clone https://github.com/mle95/moonshot.git
