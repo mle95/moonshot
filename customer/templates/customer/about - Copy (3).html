@@ -1,0 +1,53 @@
+{% extends 'customer/base.html' %}
+
+{% block content %} 
+
+{% load account %}
+{% load i18n %}
+
+<h3>Online Food Ordering (customer profile)</h3>
+
+<br>current balance 
+<b> ${{ balance }} </b>
+
+{% if user.is_authenticated %}
+
+  <table cellpadding=30 border=0><tr><td> 
+  {{ user.first_name }} {{ user.last_name }} <br>
+  {{ phone }} <br>
+  {{ email }} <br>
+
+  <br>
+  {{ street }} <br>
+  {{ city }}, {{ state }} {{ zip_code }} <br>
+  <hr>
+
+  {% if orders %}
+  Orders history <br><br>
+  {% endif %}
+
+  {% for order in orders %}
+  {% if order.email == user.email %}
+     {{ order.created_on}} <br>
+
+     {% for item in order.items.all %}
+        {{ item.name }} ${{ item.price }} <br>
+     {% endfor %}
+     <br>
+
+  {% endif %}
+  {% endfor %}
+  </td></tr></table>
+
+{% endif %}
+
+<br><br>
+
+<h4>show more info?</h4>
+
+more text here...
+<br><br>
+more text here...
+
+
+{% endblock content %}

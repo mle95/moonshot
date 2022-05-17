@@ -402,16 +402,18 @@ class Order(View):
 
         # if new order cost is more than account balance, reject this order now
         if price > this_customer.balance:
-           this_customer.warnings += 1    #add one warning
-           if this_customer.warnings > 2:
+           this_customer.warnings += 1     #add one warning
+           if this_customer.warnings >= 2:
               this_customer.VIP_status = 0    # downgrade account status to regular
 
-           print("customer.warnings count")
-           print(this_customer.warnings)
+           if this_customer.warnings >= 2 and this_customer.VIP_status == 0:
+              this_customer.blacklist = True  # flag this account to blacklist
+
+           #update customer profile in the database MySQL
            this_customer.save()
            return render(request, 'customer/order-reject.html', context)
 
-        # create new entry in database table
+        # create new food order entry in database table
         order = OrderModel.objects.create(
             price=price,
             name=name,

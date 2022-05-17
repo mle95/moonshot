@@ -1,0 +1,31 @@
+<!-- getbootstrap.com/docs/4.0/components/navbar/
+-->
+{% load account %}
+{% load i18n %}
+
+<nav class="navbar navbar-expand-lg navbar-light indigo">
+  <a class="navbar-brand" href="{% url 'index' %}">Food Connect</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'about' %}">Customer info</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'menu_display' %}">Menu</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'order' %}">Place an order!</a>
+      </li>
+    </ul>
+
+    <table border=0 width="40%"><tr><td align="right">
+    {{ user.email }}
+    </td></tr></table>
+
+  </div>
+</nav>

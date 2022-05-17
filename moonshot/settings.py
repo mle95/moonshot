@@ -151,8 +151,16 @@ ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 USERNAME_FIELD = 'email'
 
 ACCOUNT_ADAPTER = 'customer.account_adapter.NoNewUsersAccountAdapter'
+ACCOUNT_EMAIL_BLACKLIST = ["MLE96@yahoo.com"]
 
 LOGIN_REDIRECT_URL = 'order'
 ACCOUNT_SIGNUP_REDIRECT_URL = 'customer_info'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

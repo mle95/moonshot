@@ -59,6 +59,7 @@ class CustomerModel(models.Model):
     orders_count = models.IntegerField(default=0, null=False)
     total_spending = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     delivery_fee = models.BooleanField(default=True)
+    blacklist = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Customer: {self.created_on.strftime("%b %d %I: %M %p")}'

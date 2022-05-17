@@ -1,0 +1,33 @@
+/* (A) WRAPPER */
+.hoverwrap {
+  position: relative; /* required for (c2) */
+  max-width: 500px;   /* optional */
+}
+
+/* (B) RESPONSIVE IMAGE */
+.hoverwrap img { width: 100%; }
+
+/* (C) CAPTION */
+.hovercap {
+  /* (C1) DIMENSIONS */
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+ 
+  /* (C2) PLACE AT BOTTOM */
+  position: absolute;
+  bottom: 0; left: 0;
+ 
+  /* (C3) COLORS */
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+/* (D) SHOW/HIDE */
+.hovercap {
+  visibility: none; opacity: 0;
+  transition: opacity 0.3s;
+}
+.hoverwrap:hover .hovercap {
+  visibility: visible; opacity: 1;
+}

@@ -3,11 +3,12 @@
 
 <br><br>
 <h3>Customer info page:</h3>
-{{user.first_name}} {{user.last_name}}
+{{user.first_name}} {{user.last_name}} <br>
+{{user.email}}
 <br><br>
 {% for customer in customers %}
 {% if customer.email == user.email %}
-show customer <a href="/about/{{customer.pk|add:-17}}">profile</a>
+/{{customer.email}}/ show customer <a href="/about/{{customer.pk|add:-17}}">profile</a>
 {% endif %}
 {% endfor %}
 
