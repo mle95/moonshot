@@ -26,8 +26,12 @@ SECRET_KEY = '(b%y6my(@zizf(agz!*6j+picf^!%tfikl#8hk3@+=e!s4a8bo'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+#link to static folder to load css files
+STATICFILES_DIRS = [ 
+    "/Users/Khanh/ms4/static",
+]
 # Application definition
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
