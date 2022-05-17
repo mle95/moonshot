@@ -1,5 +1,3 @@
-# /customer/views.py
-
 import json
 from django.shortcuts import render, redirect
 from django.views import View
@@ -325,7 +323,6 @@ class Orders_Biddings_All(View):
 
         return redirect('orders_biddings_all')
 
-delivery_fee = 5
 
 class Order(View):
     def get(self, request, *args, **kwargs):
@@ -388,42 +385,54 @@ class Order(View):
 
             order_items['items'].append(item_data)
 
-        
-
         price = 0
         
-        
-
         item_ids = []
 
         for item in order_items['items']:
             price += item['price']
             item_ids.append(item['id'])
 
-        price = price + delivery_fee
+        # $5 delivery charge
+        delivery_fee = 5
 
         this_customer = CustomerModel.objects.get(email__exact=request.user.email)
+
+        this_customer.orders_count += 1
+
+        # VIP account upgrade
+        if this_customer.orders_count >= 5:
+           this_customer.VIP_status = 5
+
+        this_customer.total_spending += price
+        # VIP account upgrade
+        if this_customer.total_spending >= 100:
+           this_customer.VIP_status = 5
+
+        #every three orders is free delivery
+        if this_customer.orders_count % 3 == 0:
+           delivery_fee = 0
+
+        discount = 0
+        if this_customer.VIP_status > 0:
+           delivery_fee = 0
+           # apply 5% discount for VIP status
+           discount = int((float(price) * 0.05))
+           print("discount")
+           print(discount)
+           price = price - discount - delivery_fee
+
         context = {
             'items': order_items['items'],
             'price': price,
             'cur_balance': this_customer.balance,
             'warnings': this_customer.warnings,
             'email': this_customer.email,
-            'home_delivery': home_delivery
+            'home_delivery': home_delivery,
         }
 
-        this_customer.orders_count = this_customer.orders_count + 1
-
-
-        if this_customer.orders_count >= 5:
-            this_customer.VIP_status = 5
-            this_customer.save()
-
-
-        if this_customer.VIP_status > 0:
-            price = price - (int(float(price) * 0.05)) - delivery_fee
-        
-
+        #print("price")
+        #print(price)
         # if new order cost is more than account balance, reject this order now
         if price > this_customer.balance:
            this_customer.warnings += 1     #add one warning
@@ -431,11 +440,15 @@ class Order(View):
               this_customer.VIP_status = 0    # downgrade account status to regular
 
            if this_customer.warnings >= 2 and this_customer.VIP_status == 0:
-              this_customer.blacklist = True  # flag this account to blacklist
+              this_customer.blacklist = True   # flag this account to blacklist
 
            #update customer profile in the database MySQL
            this_customer.save()
            return render(request, 'customer/order-reject.html', context)
+
+        # subtract this order cost from account balance
+        this_customer.balance -= price
+        this_customer.save()
 
         # create new food order entry in database table
         order = OrderModel.objects.create(
@@ -448,6 +461,8 @@ class Order(View):
             state=state,
             zip_code=zip_code,
             home_delivery=home_delivery,
+            delivery_fee=delivery_fee,
+            discount=discount
         )
         order.items.add(*item_ids)
 
@@ -462,21 +477,7 @@ class OrderConfirmation(View):
     def get(self, request, pk, *args, **kwargs):
 
         order = OrderModel.objects.get(pk=pk)
-
         this_customer = CustomerModel.objects.get(email__exact=order.email)
-        this_customer.balance -= order.price
-        this_customer.orders_count += 1
-
-        # generate warnings here if orders cost exceed current balance
-
-
-        if this_customer.orders_count % 3 == 0:
-           this_customer.delivery_fee = 0
-        this_customer.save()
-
-
-        # if this_customer.delivery_fee == 0:
-        #    delivery_fee = 0
 
         context = {
             'pk': order.pk,
@@ -490,8 +491,9 @@ class OrderConfirmation(View):
             'state': order.state,
             'zip_code': order.zip_code,
             'home_delivery': order.home_delivery,
-            'delivery_fee':delivery_fee,
-            'VIP_status':this_customer.VIP_status,
+            'delivery_fee':order.delivery_fee,
+            'VIP_status': this_customer.VIP_status,
+            'discount': order.discount,
             'cur_balance': this_customer.balance
         }
 
@@ -503,7 +505,7 @@ class OrderConfirmation(View):
         if data['isPaid']:
             order = OrderModel.objects.get(pk=pk)
             order.is_paid = True
-            order.save()
+            #order.save()
 
         return redirect('payment-confirmation')
 
