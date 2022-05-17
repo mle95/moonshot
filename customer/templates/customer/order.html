@@ -22,6 +22,9 @@ function validateCheckboxes() {
 <div class="container mb-5">
     <div class="row justify-content-left mt-1">
         <div class="col-md-12 col-sm-12 p-4">
+        {% if this_customer.VIP_status > 0 %}
+        <h6>VIP status 5% discount on this order.</h6>
+        {% endif %}
             <form method="POST">
                 {% csrf_token %}
                 <div class="pt-5">
