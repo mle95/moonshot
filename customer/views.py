@@ -193,7 +193,7 @@ class Orders_Biddings(View):
              break;   # no more biddings, terminate this for-loop
           try: 
              this_bid = BiddingsModel.objects.get(driver_email__exact=request.user.email, order_id__exact=orders[k])
-             print("post() update entry _____________")
+             print("update entry _____________")
              length = len(bid)
              if length > 0:
                 this_bid.delivery_price = int(bid)
@@ -209,7 +209,7 @@ class Orders_Biddings(View):
                 k += 1
 
           except ObjectDoesNotExist: 
-             print("post() new entry____")
+             print("new entry____")
              length = len(bid)
              if length > 0:
                 this_bid = BiddingsModel.objects.create(
@@ -396,9 +396,6 @@ class Order(View):
         # $5 delivery charge
         delivery_fee = 5
 
-        
-
-
         this_customer = CustomerModel.objects.get(email__exact=request.user.email)
 
         this_customer.orders_count += 1
@@ -416,17 +413,12 @@ class Order(View):
         if this_customer.orders_count % 3 == 0:
            delivery_fee = 0
 
-
-        print("home_deliver2")
-        print (home_delivery)
-
-        if home_delivery == False:
+        # pick-up order at restaurant
+        if home_delivery == 'False':
             delivery_fee = 0
-            print("home_delivery_executed")
 
         print("home_delivery")
         print (home_delivery)
-
 
         discount = 0
         if this_customer.VIP_status > 0:
@@ -446,15 +438,17 @@ class Order(View):
             'warnings': this_customer.warnings,
             'email': this_customer.email,
             'home_delivery': home_delivery,
+            'delivery_fee': delivery_fee
         }
 
         #print("price")
         #print(price)
         # if new order cost is more than account balance, reject this order now
         if price > this_customer.balance:
-           this_customer.warnings += 1     #add one warning
+           this_customer.warnings += 1      # add one warning
            if this_customer.warnings >= 2:
               this_customer.VIP_status = 0    # downgrade account status to regular
+              this_customer.warnings = 0      # reset warnings to zero
 
            if this_customer.warnings >= 2 and this_customer.VIP_status == 0:
               this_customer.blacklist = True   # flag this account to blacklist
