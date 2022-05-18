@@ -1,9 +1,12 @@
 ## Project name
 Moonshot
+
 ## Project members
 Minh Le, Vinuk Ranaweera, Tea Nurcellari, Yauheni Patapau, Khanh Huang
+
 ## Description:
-This is the final project for CSc 322 which is an online food delivery application.
+This is the final project for CSc 322 which is an online food delivery application. This framework offers a comprehensive front-end and back-end with the relational database MySQL built in. We also used javascript and css to enhance the front-end user interface. We also utilized other technologies that you can see in our GitHub repository. 
+
 ## How to run the project:
 
 (For Ubuntu/ Linux):
