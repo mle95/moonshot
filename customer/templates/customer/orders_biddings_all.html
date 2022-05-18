@@ -108,7 +108,7 @@ function updateOrdersBiddings(number, receipt, driver_email, name, street, city,
                                       {{ bid.customer_zip_code }}
                                       )" id="biddings[]" name="biddings[]" min=1 max=99 size=1></td>
 
-                            <td> <input type="checkbox" 
+                            <td> <input type="radio" 
                             onChange="updateOrdersBiddings({{ bid.order_id }},
                                      '{{ bid.customer_receipt }}',
                                      '{{ bid.driver_email }}',
