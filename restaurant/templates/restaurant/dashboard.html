@@ -5,12 +5,12 @@
         <div class="row justify-content-center mt-3">
             <div class="card col-md-5 mr-3">
                 <h4 class="text-center pt-2"><u>Total Revenue</u></h4>
-                <h3 class="text-center" style="color: black;">${{ total_revenue }}</h3>
+                <h4 class="text-center" style="color: black;">${{ total_revenue }}</h4>
             </div>
 
             <div class="card col-md-5 mr-3">
                 <h4 class="text-center pt-2"><u>Total Orders</u></h4>
-                <h3 class="text-center" style="color: orange;">{{ total_orders }}</h3>
+                <h4 class="text-center" style="color: orange;">{{ total_orders }}</h4>
             </div>
         </div>
 
@@ -27,7 +27,6 @@
                             <th scope="col">City</th>
                             <th scope="col">State</th>
                             <th scope="col">Zip</th>
-                            <th scope="col">Payment</th>
                         </tr>
                     </thead>
 
@@ -42,14 +41,38 @@
                             <td>{{ order.city }}</td>
                             <td>{{ order.state }}</td>
                             <td>{{ order.zip_code }}</td>
-                            <td>{{ order.bidding }}
-
-                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+
+            <div class="col-md-12 mt-5">
+                Blacklist
+                <table class="table table-hover table-striped" border=1>
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr>
+                            {% if customer.blacklist == True %}
+                            <th scope="row">{{ customer.name }}</th>
+                            <td>{{ customer.email }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <br><br>
+
+
         </div>
     </div>
 {% endblock content %}
