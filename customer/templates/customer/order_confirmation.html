@@ -15,8 +15,8 @@
             {% if VIP_status > 0 %}
             <br>VIP discount: -${{ discount }}<br>
             {%endif%}
-            {% if VIP_status == 0 %}
-            <br>Delivery fee: $5<br>
+            {% if delivery_fee > 0 %}
+            <br>Delivery fee: ${{delivery_fee}}<br>
             {%endif%}
             <p class="font-weight-bold pt-4"><h6>Total: ${{ price }}</h6></p>
       
