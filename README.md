@@ -21,5 +21,3 @@ This is the final project for CSc 322 which is an online food delivery applicati
 - pip install -r requirements.txt
 - python manage.py runserver
 
-## Project Documentation:
-
