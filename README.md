@@ -1,7 +1,7 @@
-Project name
+Project name: 
 Moonshot
 
-Project members
+Project members: 
 Minh Le, Vinuk Ranaweera, Tea Nurcellari, Yauheni Patapau, Khanh Huang
 
 Description:
